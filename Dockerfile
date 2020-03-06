@@ -4,7 +4,7 @@ ARG COMMIT_ID
 ARG VERSION=""
 ARG VCS_BRANCH=""
 ARG GRPC_STUB_REVISION=""
-ARG PROJECT_NAME=aurora
+ARG PROJECT_NAME=starter
 ARG DOCKER_PROJECT_DIR=/build
 ARG EXTRA_BUILD_ARGS=""
 ARG GOCACHE=""
@@ -28,9 +28,9 @@ RUN apk --no-cache --update add ca-certificates tzdata && \
 
 ENV TZ=Asia/Shanghai
 
-COPY --from=builder /output/starter
+COPY --from=builder /output/starter /starter
 COPY config/config.sample.yml /
 COPY gen/apidoc.html /gen/
 
 EXPOSE 8080
-CMD ["/starter"runserver"]
+CMD ["/starter", "runserver"]
