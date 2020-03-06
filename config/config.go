@@ -7,7 +7,7 @@ import (
 
 	"git.chinaopen.ai/iot/go-libs/jwt"
 	"git.chinaopen.ai/iot/go-libs/redis"
-	"git.chinaopen.ai/sc-ncov/tif"
+	"git.chinaopen.ai/yottacloud/tif"
 	"github.com/jinzhu/configor"
 	"go.uber.org/zap"
 )

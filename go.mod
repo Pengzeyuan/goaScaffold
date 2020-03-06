@@ -5,7 +5,7 @@ go 1.13
 require (
 	cloud.google.com/go v0.45.1 // indirect
 	git.chinaopen.ai/iot/go-libs v0.0.5-0.20200227174941-29bea7707349
-	git.chinaopen.ai/sc-ncov/tif v0.0.3-0.20200228035513-4be894b8029b
+	git.chinaopen.ai/yottacloud/tif v0.0.4
 	github.com/bxcodec/faker/v3 v3.3.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-redis/cache/v7 v7.0.2
@@ -27,6 +27,7 @@ require (
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/testify v1.4.0
+	github.com/tidwall/gjson v1.6.0 // indirect
 	github.com/tidwall/pretty v1.0.1 // indirect
 	github.com/vmihailenco/msgpack/v4 v4.3.7
 	go.uber.org/multierr v1.5.0 // indirect
@@ -34,9 +35,9 @@ require (
 	goa.design/goa/v3 v3.0.10
 	goa.design/plugins/v3 v3.0.10
 	golang.org/x/crypto v0.0.0-20191227163750-53104e6ec876
-	golang.org/x/lint v0.0.0-20200130185559-910be7a94367 // indirect
-	golang.org/x/net v0.0.0-20200226121028-0de0cce0169b // indirect
-	golang.org/x/tools v0.0.0-20200227222343-706bc42d1f0d // indirect
+	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
+	golang.org/x/net v0.0.0-20200301022130-244492dfa37a // indirect
+	golang.org/x/tools v0.0.0-20200305224536-de023d59a5d1 // indirect
 	gopkg.in/resty.v1 v1.12.0
 	honnef.co/go/tools v0.0.1-2020.1.3 // indirect
 )

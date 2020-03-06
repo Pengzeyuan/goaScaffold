@@ -9,7 +9,7 @@ import (
 	"starter/service"
 	"time"
 
-	"git.chinaopen.ai/sc-ncov/tif"
+	"git.chinaopen.ai/yottacloud/tif"
 	"github.com/dgrijalva/jwt-go"
 	"goa.design/goa/v3/security"
 

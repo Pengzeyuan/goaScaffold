@@ -40,7 +40,7 @@ test:
 #   dependencies:
 #     - test
 #   only:
-#     - develop@sc-ncov/starter
+#     - develop@yottacloud/starter
 
 #   before_script:
 #     - docker info
@@ -65,7 +65,7 @@ test:
 #   only:
 #     - tags
 #   except:
-#     - master@sc-ncov/starter
+#     - master@yottacloud/starter
 #   before_script:
 #     - docker info
 #     - docker login -u ${CI_REGISTRY_USERNAME} -p ${CI_REGISTRY_PASSWORD} ${REGISTRY_HOST}
@@ -85,7 +85,7 @@ test:
 #   stage: deploy
 #   image: hub.chinaopen.ai/library/rancher-cli:v2.3.0_2
 #   only:
-#     - master@sc-ncov/starter
+#     - master@yottacloud/starter
 #   dependencies: []
 
 #   script:
@@ -106,7 +106,7 @@ release:
   variables:
     CONTENT_TYPE: "Content-Type: application/json"
     GITLAB_TOKEN: "PRIVATE-TOKEN: ${GITLAB_PRIVATE_TOKEN}"
-    TAR_DOWNLOAD_URL: "https://git.chinaopen.ai/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/-/jobs/artifacts/${CI_COMMIT_REF_NAME}/raw/dist/starterCI_COMMIT_TAG}.tar.gz?job=${CI_JOB_NAME}"
+    TAR_DOWNLOAD_URL: "https://git.chinaopen.ai/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/-/jobs/artifacts/${CI_COMMIT_REF_NAME}/raw/dist/starter-${CI_COMMIT_TAG}.tar.gz?job=${CI_JOB_NAME}"
   before_script:
     - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
     - eval $(ssh-agent -s)
@@ -122,4 +122,4 @@ release:
     - export GOSUMDB=off
     - make release
     - echo ${TAR_DOWNLOAD_URL}
-    - curl -X POST -H "${CONTENT_TYPE}" -H "${GITLAB_TOKEN}" --data "{\"name\":\"${CI_COMMIT_TAG}\",\"tag_name\":\"${CI_COMMIT_TAG}\",\"description\":\"Release ${CI_COMMIT_TAG}\",\"assets\":{\"links\":[{\"name\":\"starterCI_COMMIT_TAG}.tar.gz\",\"url\":\"${TAR_DOWNLOAD_URL}\"}]}}" "https://git.chinaopen.ai/api/v4/projects/${CI_PROJECT_ID}/releases"
+    - curl -X POST -H "${CONTENT_TYPE}" -H "${GITLAB_TOKEN}" --data "{\"name\":\"${CI_COMMIT_TAG}\",\"tag_name\":\"${CI_COMMIT_TAG}\",\"description\":\"Release ${CI_COMMIT_TAG}\",\"assets\":{\"links\":[{\"name\":\"starter-${CI_COMMIT_TAG}.tar.gz\",\"url\":\"${TAR_DOWNLOAD_URL}\"}]}}" "https://git.chinaopen.ai/api/v4/projects/${CI_PROJECT_ID}/releases"
