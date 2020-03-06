@@ -1,0 +1,23 @@
+# 调试模式：生产环境请关闭此项
+debug: true
+logger:
+  level: debug
+database:
+  dsn: root:123456@(127.0.0.1:3306)/starter?charset=utf8mb4&parseTime=True&loc=Local
+server:
+  http_port: 8080
+jwt:
+  secret: 32df50c00e864ba457b7c67c4409535a
+redis:
+  uri: redis://127.0.0.1:6379/1
+tif:
+  base_url:
+  paas_id:
+  paas_token:
+  web_paas_id:
+  token_path:
+  mock: true
+bbd:
+  url: http://42.123.99.90:26950
+  secret_key:
+  mock: true

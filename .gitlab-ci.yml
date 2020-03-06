@@ -1,0 +1,125 @@
+variables:
+  GO_MOD_CACHE: ${CI_PROJECT_DIR}/.cache
+  MY_PROJECT_NAME: starter
+  DOCKER_GROUP_NAME: yottacloud
+  DOCKER_IMG_NAME: ${REGISTRY_HOST}/${DOCKER_GROUP_NAME}/${MY_PROJECT_NAME}
+  DOCKER_IMG_TAG: ${CI_COMMIT_SHORT_SHA}-${CI_BUILD_ID}
+
+stages:
+  - test
+  - package
+  - deploy
+  - release
+
+test:
+  stage: test
+  image: hub.chinaopen.ai/library/go-builder:1.13-alpine
+  artifacts:
+    name: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - ${GO_MOD_CACHE}
+      - vendor
+    expire_in: 7 days
+    when: on_success
+    untracked: true
+
+  before_script:
+    - git config --global url."git@git.chinaopen.ai:".insteadOf "https://git.chinaopen.ai/"
+  script:
+    - export GOPRIVATE=git.chinaopen.ai
+    - export GOSUMDB=off
+    - go mod vendor
+    # - make lint -e GOCACHE=${GO_MOD_CACHE}
+    - make build -e GOCACHE=${GO_MOD_CACHE} -e EXTRA_BUILD_ARGS=-mod=vendor
+    # - make test -e GOCACHE=${GO_MOD_CACHE} -e EXTRA_BUILD_ARGS=-mod=vendor
+    - make clean
+
+# package-dev:
+#   stage: package
+#   image: docker:stable
+#   dependencies:
+#     - test
+#   only:
+#     - develop@sc-ncov/starter
+
+#   before_script:
+#     - docker info
+#     - docker login -u ${CI_REGISTRY_USERNAME} -p ${CI_REGISTRY_PASSWORD} ${REGISTRY_HOST}
+#   script:
+#     - echo "build docker image for develop"
+#     - |
+#       docker build -t ${DOCKER_IMG_NAME}:dev-${DOCKER_IMG_TAG} -t ${DOCKER_IMG_NAME}:dev \
+#         --build-arg EXTRA_BUILD_ARGS=-mod=vendor \
+#         --build-arg COMMIT_ID=${CI_COMMIT_SHA} \
+#         --build-arg COMMIT_TAG=${CI_COMMIT_TAG} \
+#         --build-arg VCS_BRANCH=${CI_COMMIT_REF_NAME} \
+#         --build-arg VERSION=${CI_COMMIT_TAG} .
+#     - docker push ${DOCKER_IMG_NAME}:dev-${DOCKER_IMG_TAG}
+#     - docker push ${DOCKER_IMG_NAME}:dev
+
+# package-release:
+#   stage: package
+#   image: docker:stable
+#   dependencies:
+#     - test
+#   only:
+#     - tags
+#   except:
+#     - master@sc-ncov/starter
+#   before_script:
+#     - docker info
+#     - docker login -u ${CI_REGISTRY_USERNAME} -p ${CI_REGISTRY_PASSWORD} ${REGISTRY_HOST}
+#   script:
+#     - echo "build docker image for develop"
+#     - |
+#       docker build -t ${DOCKER_IMG_NAME}:release-${CI_COMMIT_TAG} -t ${DOCKER_IMG_NAME}:release \
+#         --build-arg EXTRA_BUILD_ARGS=-mod=vendor \
+#         --build-arg COMMIT_ID=${CI_COMMIT_SHA} \
+#         --build-arg COMMIT_TAG=${CI_COMMIT_TAG} \
+#         --build-arg VCS_BRANCH=${CI_COMMIT_REF_NAME} \
+#         --build-arg VERSION=${CI_COMMIT_TAG} .
+#     - docker push ${DOCKER_IMG_NAME}:release-${CI_COMMIT_TAG}
+#     - docker push ${DOCKER_IMG_NAME}:release
+
+# deploy-dev:
+#   stage: deploy
+#   image: hub.chinaopen.ai/library/rancher-cli:v2.3.0_2
+#   only:
+#     - master@sc-ncov/starter
+#   dependencies: []
+
+#   script:
+#     - rancher login ${RANCHER_URL} --token ${RANCHER_TOKEN} --context ${RANCHER_PROJECT_ID}
+#     - rancher kubectl -n ${RANCHER_NAMESPACE} set env deployments -l app=${RANCHER_DEPLOY} DOCKER_BUILD_ID=${DOCKER_IMG_TAG} --overwrite=true
+#     - rancher kubectl -n ${RANCHER_NAMESPACE} get po -l app=${RANCHER_DEPLOY}
+
+release:
+  stage: release
+  image: golang:1.13
+  dependencies: []
+  only:
+    - tags
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 month
+  variables:
+    CONTENT_TYPE: "Content-Type: application/json"
+    GITLAB_TOKEN: "PRIVATE-TOKEN: ${GITLAB_PRIVATE_TOKEN}"
+    TAR_DOWNLOAD_URL: "https://git.chinaopen.ai/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/-/jobs/artifacts/${CI_COMMIT_REF_NAME}/raw/dist/starterCI_COMMIT_TAG}.tar.gz?job=${CI_JOB_NAME}"
+  before_script:
+    - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - chmod 600 ~/.ssh
+    - git config --global url."git@git.chinaopen.ai:".insteadOf "https://git.chinaopen.ai/"
+  script:
+    - export GOPROXY=https://goproxy.chinaopen.ai,direct
+    - export GOPRIVATE=git.chinaopen.ai
+    - export GOSUMDB=off
+    - make release
+    - echo ${TAR_DOWNLOAD_URL}
+    - curl -X POST -H "${CONTENT_TYPE}" -H "${GITLAB_TOKEN}" --data "{\"name\":\"${CI_COMMIT_TAG}\",\"tag_name\":\"${CI_COMMIT_TAG}\",\"description\":\"Release ${CI_COMMIT_TAG}\",\"assets\":{\"links\":[{\"name\":\"starterCI_COMMIT_TAG}.tar.gz\",\"url\":\"${TAR_DOWNLOAD_URL}\"}]}}" "https://git.chinaopen.ai/api/v4/projects/${CI_PROJECT_ID}/releases"
