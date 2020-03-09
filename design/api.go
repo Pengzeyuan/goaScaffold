@@ -7,6 +7,9 @@ import (
 
 var _ = API("starter", func() {
 	Title("微服务")
+	HTTP(func() {
+		Path("/api")
+	})
 
 	Server("starter", func() {
 		Description("微服务")
@@ -29,4 +32,5 @@ var APIKeyAuth = APIKeySecurity("api_key", func() {
 var JWTAuth = JWTSecurity("jwt", func() {
 	Description(`JWT 认证`)
 	Scope("role:user", "用户")
+	Scope("role:admin", "管理员")
 })

@@ -9,25 +9,25 @@ package client
 
 // LoginByUsernameUserPath returns the URL path to the User service LoginByUsername HTTP endpoint.
 func LoginByUsernameUserPath() string {
-	return "/user/login_by_username"
+	return "/api/user/login_by_username"
 }
 
 // LoginBySmsCodeUserPath returns the URL path to the User service LoginBySmsCode HTTP endpoint.
 func LoginBySmsCodeUserPath() string {
-	return "/user/login_by_mobile"
+	return "/api/user/login_by_mobile"
 }
 
 // UpdatePasswordUserPath returns the URL path to the User service UpdatePassword HTTP endpoint.
 func UpdatePasswordUserPath() string {
-	return "/user/update_password"
+	return "/api/user/update_password"
 }
 
 // GetCaptchaImageUserPath returns the URL path to the User service GetCaptchaImage HTTP endpoint.
 func GetCaptchaImageUserPath() string {
-	return "/user/get_captcha_image"
+	return "/api/user/get_captcha_image"
 }
 
 // SendSmsCodeUserPath returns the URL path to the User service SendSmsCode HTTP endpoint.
 func SendSmsCodeUserPath() string {
-	return "/user/send_sms_code"
+	return "/api/user/send_sms_code"
 }

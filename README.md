@@ -4,7 +4,7 @@
 
 - mysql 5.7+
 - redis 4.0+
-- golang 1.3
+- golang 1.13
 
 ### 配置
 

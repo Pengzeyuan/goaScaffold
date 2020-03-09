@@ -3,6 +3,7 @@ info:
   title: 微服务
   version: ""
 host: localhost:8000
+basePath: /api
 consumes:
 - application/json
 - application/xml

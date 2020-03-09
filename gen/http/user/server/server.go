@@ -59,11 +59,11 @@ func New(
 ) *Server {
 	return &Server{
 		Mounts: []*MountPoint{
-			{"LoginByUsername", "POST", "/user/login_by_username"},
-			{"LoginBySmsCode", "POST", "/user/login_by_mobile"},
-			{"UpdatePassword", "POST", "/user/update_password"},
-			{"GetCaptchaImage", "POST", "/user/get_captcha_image"},
-			{"SendSmsCode", "POST", "/user/send_sms_code"},
+			{"LoginByUsername", "POST", "/api/user/login_by_username"},
+			{"LoginBySmsCode", "POST", "/api/user/login_by_mobile"},
+			{"UpdatePassword", "POST", "/api/user/update_password"},
+			{"GetCaptchaImage", "POST", "/api/user/get_captcha_image"},
+			{"SendSmsCode", "POST", "/api/user/send_sms_code"},
 		},
 		LoginByUsername: NewLoginByUsernameHandler(e.LoginByUsername, mux, decoder, encoder, errhandler, formatter),
 		LoginBySmsCode:  NewLoginBySmsCodeHandler(e.LoginBySmsCode, mux, decoder, encoder, errhandler, formatter),
@@ -103,7 +103,7 @@ func MountLoginByUsernameHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("POST", "/user/login_by_username", f)
+	mux.Handle("POST", "/api/user/login_by_username", f)
 }
 
 // NewLoginByUsernameHandler creates a HTTP handler which loads the HTTP
@@ -156,7 +156,7 @@ func MountLoginBySmsCodeHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("POST", "/user/login_by_mobile", f)
+	mux.Handle("POST", "/api/user/login_by_mobile", f)
 }
 
 // NewLoginBySmsCodeHandler creates a HTTP handler which loads the HTTP request
@@ -209,7 +209,7 @@ func MountUpdatePasswordHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("POST", "/user/update_password", f)
+	mux.Handle("POST", "/api/user/update_password", f)
 }
 
 // NewUpdatePasswordHandler creates a HTTP handler which loads the HTTP request
@@ -262,7 +262,7 @@ func MountGetCaptchaImageHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("POST", "/user/get_captcha_image", f)
+	mux.Handle("POST", "/api/user/get_captcha_image", f)
 }
 
 // NewGetCaptchaImageHandler creates a HTTP handler which loads the HTTP
@@ -308,7 +308,7 @@ func MountSendSmsCodeHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("POST", "/user/send_sms_code", f)
+	mux.Handle("POST", "/api/user/send_sms_code", f)
 }
 
 // NewSendSmsCodeHandler creates a HTTP handler which loads the HTTP request
