@@ -13,7 +13,7 @@ import (
 	"starter/config"
 	controller "starter/controller"
 	log "starter/gen/log"
-	"starter/gen/starter"
+	"starter/gen/user"
 	metricsMlwr "starter/middleware/metrics"
 
 	"git.chinaopen.ai/iot/go-libs/panichandler"
@@ -32,19 +32,19 @@ func RunServer(cfg *config.Config, metrics *metricsMlwr.Prometheus) {
 
 	// Initialize the services.
 	var (
-		starterSvc starter.Service
+		userSvc user.Service
 	)
 	{
-		starterSvc = controller.NewStarter(logger)
+		userSvc = controller.NewUser(logger)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
 	var (
-		starterEndpoints *starter.Endpoints
+		userEndpoints *user.Endpoints
 	)
 	{
-		starterEndpoints = starter.NewEndpoints(starterSvc)
+		userEndpoints = user.NewEndpoints(userSvc)
 	}
 
 	// Create channel used by both the signal handler and server goroutines
@@ -64,7 +64,7 @@ func RunServer(cfg *config.Config, metrics *metricsMlwr.Prometheus) {
 
 	addr := fmt.Sprintf("http://%s:%s", cfg.Server.Host, cfg.Server.HTTPPort)
 	u, _ := url.Parse(addr)
-	handleHTTPServer(ctx, u.Host, starterEndpoints, &wg, errc, logger, metrics, cfg.Debug)
+	handleHTTPServer(ctx, u.Host, userEndpoints, &wg, errc, logger, metrics, cfg.Debug)
 
 	// Wait for signal.
 	logger.Infof("exiting (%v)", <-errc)

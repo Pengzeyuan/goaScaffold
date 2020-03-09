@@ -10,7 +10,7 @@ var _ = API("starter", func() {
 
 	Server("starter", func() {
 		Description("微服务")
-		Services("starter")
+		Services("User")
 
 		Host("localhost", func() {
 			Description("default host")

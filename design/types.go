@@ -72,3 +72,11 @@ var Session = ResultType("Session", func() {
 		Attribute("credentials")
 	})
 })
+
+var Captcha = Type("Captcha", func() {
+	Attribute("image", String, "图片base64", func() {
+	})
+	Attribute("captchaId", String, "验证码ID", func() {
+	})
+	Required("image", "captchaId")
+})

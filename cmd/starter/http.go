@@ -12,16 +12,16 @@ import (
 	httpmdlwr "goa.design/goa/v3/http/middleware"
 	"goa.design/goa/v3/middleware"
 
-	startersvr "starter/gen/http/starter/server"
+	usersvr "starter/gen/http/user/server"
 	log "starter/gen/log"
-	"starter/gen/starter"
+	"starter/gen/user"
 	mdlwr "starter/middleware"
 	"starter/middleware/metrics"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, host string, starterEndpoints *starter.Endpoints, wg *sync.WaitGroup,
+func handleHTTPServer(ctx context.Context, host string, userEndpoints *user.Endpoints, wg *sync.WaitGroup,
 	errc chan error, logger *log.Logger, metrics *metrics.Prometheus, debug bool) {
 
 	// Setup goa log adapter.
@@ -53,14 +53,14 @@ func handleHTTPServer(ctx context.Context, host string, starterEndpoints *starte
 	// the service input and output data structures to HTTP requests and
 	// responses.
 	var (
-		starterServer *startersvr.Server
+		userServer *usersvr.Server
 	)
 	{
 		eh := errorHandler(logger)
-		starterServer = startersvr.New(starterEndpoints, mux, dec, enc, eh, mdlwr.GoaErrorFormatterFunc)
+		userServer = usersvr.New(userEndpoints, mux, dec, enc, eh, mdlwr.GoaErrorFormatterFunc)
 	}
 	// Configure the mux.
-	startersvr.Mount(mux, starterServer)
+	usersvr.Mount(mux, userServer)
 
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
 	// here apply to all the service endpoints.
@@ -83,7 +83,7 @@ func handleHTTPServer(ctx context.Context, host string, starterEndpoints *starte
 	// Start HTTP server using default configuration, change the code to
 	// configure the server as required by your service.
 	srv := &http.Server{Addr: host, Handler: handler}
-	for _, m := range starterServer.Mounts {
+	for _, m := range userServer.Mounts {
 		logger.Infof("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
 
