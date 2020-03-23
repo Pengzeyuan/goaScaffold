@@ -1006,5 +1006,6 @@ securityDefinitions:
 
       **Security Scopes**:
         * `role:user`: 用户
+        * `role:admin`: 管理员
     name: Authorization
     in: header
