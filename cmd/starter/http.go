@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"git.chinaopen.ai/yottacloud/go-libs/goa-libs/middleware/metrics"
 	"go.uber.org/zap"
 	goahttp "goa.design/goa/v3/http"
 	httpmdlwr "goa.design/goa/v3/http/middleware"
@@ -16,7 +17,6 @@ import (
 	log "starter/gen/log"
 	"starter/gen/user"
 	mdlwr "starter/middleware"
-	"starter/middleware/metrics"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given

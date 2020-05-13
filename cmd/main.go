@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"git.chinaopen.ai/iot/go-libs/redis"
+	"git.chinaopen.ai/yottacloud/go-libs/redis"
 	"github.com/lneoe/go-help-libs/version"
 	"github.com/spf13/cobra"
 
@@ -11,7 +11,7 @@ import (
 	"starter/config"
 	"starter/dao"
 
-	metricsMlwr "starter/middleware/metrics"
+	metricsMlwr "git.chinaopen.ai/yottacloud/go-libs/goa-libs/middleware/metrics"
 )
 
 var (

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"git.chinaopen.ai/iot/go-libs/redis"
+	"git.chinaopen.ai/yottacloud/go-libs/redis"
 	libredis "github.com/go-redis/redis/v7"
 	"github.com/go-redis/redis_rate/v8"
 	"go.uber.org/zap"

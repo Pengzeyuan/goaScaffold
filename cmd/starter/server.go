@@ -14,9 +14,9 @@ import (
 	controller "starter/controller"
 	log "starter/gen/log"
 	"starter/gen/user"
-	metricsMlwr "starter/middleware/metrics"
 
-	"git.chinaopen.ai/iot/go-libs/panichandler"
+	metricsMlwr "git.chinaopen.ai/yottacloud/go-libs/goa-libs/middleware/metrics"
+	"git.chinaopen.ai/yottacloud/go-libs/panichandler"
 	"go.uber.org/zap"
 )
 

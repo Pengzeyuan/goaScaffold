@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"git.chinaopen.ai/iot/go-libs/jwt"
-	"git.chinaopen.ai/iot/go-libs/redis"
+	"git.chinaopen.ai/yottacloud/go-libs/jwt"
+	"git.chinaopen.ai/yottacloud/go-libs/redis"
 	"git.chinaopen.ai/yottacloud/tif"
 	"github.com/jinzhu/configor"
 	"go.uber.org/zap"
