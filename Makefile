@@ -71,7 +71,6 @@ else
 	goa gen $(PACKAGE)/$(GOA_DESIGN_PATH) -o $(GOA_GEN_OUTPUT)
 endif
 	@make goa-mock GOA_GEN_OUTPUT=$(GOA_GEN_OUTPUT)
-	@gomodifytags -file gen/user/service.go -line=0,100000 -add-tags json -transform camelcase -w -override
 	@make gen-apidoc
 
 release:
