@@ -1,6 +1,6 @@
 module starter
 
-go 1.13
+go 1.14
 
 require (
 	cloud.google.com/go v0.45.1 // indirect
@@ -14,7 +14,6 @@ require (
 	github.com/go-resty/resty/v2 v2.2.0
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/google/uuid v1.1.1
-	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/jinzhu/configor v1.1.1
 	github.com/jinzhu/gorm v1.9.10
 	github.com/jinzhu/now v1.1.1 // indirect
@@ -29,11 +28,11 @@ require (
 	github.com/vmihailenco/msgpack/v4 v4.3.7
 	go.uber.org/multierr v1.5.0 // indirect
 	go.uber.org/zap v1.14.0
-	goa.design/goa/v3 v3.1.2
-	goa.design/plugins/v3 v3.1.2
-	golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d
+	goa.design/goa/v3 v3.2.0
+	goa.design/plugins/v3 v3.2.0
+	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
-	golang.org/x/net v0.0.0-20200320220750-118fecf932d8 // indirect
-	golang.org/x/tools v0.0.0-20200321224714-0d839f3cf2ed // indirect
+	golang.org/x/sys v0.0.0-20200724161237-0e2f3a69832c // indirect
+	golang.org/x/tools v0.0.0-20200724172932-b5fc9d354d99 // indirect
 	honnef.co/go/tools v0.0.1-2020.1.3 // indirect
 )

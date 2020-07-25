@@ -269,13 +269,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -314,13 +312,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -334,8 +330,7 @@ definitions:
         type: boolean
         description: Is the error a timeout?
         example: true
-    description: GetCaptchaImage_internal_server_error_Response_Body result type (default
-      view)
+    description: GetCaptchaImage_internal_server_error_Response_Body result type (default view)
     example:
       fault: false
       id: 123abc
@@ -385,13 +380,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -430,13 +423,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -450,8 +441,7 @@ definitions:
         type: boolean
         description: Is the error a timeout?
         example: true
-    description: LoginBySmsCode_internal_server_error_Response_Body result type (default
-      view)
+    description: LoginBySmsCode_internal_server_error_Response_Body result type (default view)
     example:
       fault: false
       id: 123abc
@@ -530,13 +520,11 @@ definitions:
         example: true
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -575,13 +563,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -595,8 +581,7 @@ definitions:
         type: boolean
         description: Is the error a timeout?
         example: true
-    description: LoginByUsername_internal_server_error_Response_Body result type (default
-      view)
+    description: LoginByUsername_internal_server_error_Response_Body result type (default view)
     example:
       fault: false
       id: 123abc
@@ -728,13 +713,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -773,13 +756,11 @@ definitions:
         example: true
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -793,8 +774,7 @@ definitions:
         type: boolean
         description: Is the error a timeout?
         example: false
-    description: SendSmsCode_internal_server_error_Response_Body result type (default
-      view)
+    description: SendSmsCode_internal_server_error_Response_Body result type (default view)
     example:
       fault: true
       id: 123abc
@@ -873,13 +853,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -918,13 +896,11 @@ definitions:
         example: false
       id:
         type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
+        description: ID is a unique identifier for this particular occurrence of the problem.
         example: 123abc
       message:
         type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
+        description: Message is a human-readable explanation specific to this occurrence of the problem.
         example: parameter 'p' must be an integer
       name:
         type: string
@@ -938,8 +914,7 @@ definitions:
         type: boolean
         description: Is the error a timeout?
         example: true
-    description: UpdatePassword_internal_server_error_Response_Body result type (default
-      view)
+    description: UpdatePassword_internal_server_error_Response_Body result type (default view)
     example:
       fault: false
       id: 123abc
