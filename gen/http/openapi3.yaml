@@ -3,7 +3,7 @@ info:
   title: 微服务
   version: "1.0"
 servers:
-- url: localhost:8000
+- url: http://localhost:8000/starter
   description: 微服务
 paths:
   /api/user/get_captcha_image:
