@@ -15,7 +15,7 @@ require (
 	github.com/golang/mock v1.4.4 // indirect
 	github.com/google/uuid v1.1.1
 	github.com/jinzhu/configor v1.2.0
-	github.com/jinzhu/gorm v1.9.16
+	github.com/jinzhu/gorm v1.9.10
 	github.com/jinzhu/now v1.1.1 // indirect
 	github.com/lneoe/go-help-libs v0.0.0-20190725022220-308d4d4b26d0
 	github.com/smartystreets/assertions v1.1.1 // indirect
@@ -26,7 +26,6 @@ require (
 	github.com/tidwall/gjson v1.6.0 // indirect
 	github.com/tidwall/pretty v1.0.1 // indirect
 	github.com/vmihailenco/msgpack/v4 v4.3.12
-	go.uber.org/multierr v1.5.0 // indirect
 	go.uber.org/zap v1.15.0
 	goa.design/goa/v3 v3.2.3
 	goa.design/plugins/v3 v3.2.3
@@ -35,6 +34,7 @@ require (
 	golang.org/x/sys v0.0.0-20200824131525-c12d262b63d8 // indirect
 	golang.org/x/tools v0.0.0-20200823205832-c024452afbcd // indirect
 	google.golang.org/appengine v1.6.6 // indirect
+	gorm.io/driver/mysql v1.0.1
+	gorm.io/gorm v1.20.0
 	honnef.co/go/tools v0.0.1-2020.1.5 // indirect
-	rsc.io/quote/v3 v3.1.0 // indirect
 )

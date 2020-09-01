@@ -3,8 +3,8 @@ package dao
 import (
 	"starter/service"
 
-	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 func NewUserDao(db *gorm.DB, cache *service.CacheService, logger *zap.Logger) *userDao {
