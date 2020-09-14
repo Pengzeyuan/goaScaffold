@@ -61,6 +61,10 @@ func (a *Auther) JWTAuth(ctx context.Context, token string, scheme *security.JWT
 		return ctx, MakeForbiddenError(ctx, err.Error())
 	}
 
+	if userClaims.ID == "" {
+		return ctx, MakeUnauthorizedError(ctx, "无操作权限")
+	}
+
 	// 保存用户ID
 	ctx = context.WithValue(ctx, KeyUserID, userClaims.ID)
 
