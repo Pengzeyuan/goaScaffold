@@ -6,7 +6,7 @@ OUTPUT_DIR=${PREFIX}/bin
 OUTPUT_FILE=${OUTPUT_DIR}/starter
 COMMIT_ID=$(shell git rev-parse --short HEAD)
 VERSION=$(shell git describe --tags || echo "v0.0.0")
-VERSION_IMPORT_PATH=github.com/lneoe/go-help-libs/version
+VERSION_IMPORT_PATH=git.chinaopen.ai/library/go-help-libs/version
 BUILD_TIME=$(shell date '+%Y-%m-%dT%H:%M:%S%Z')
 VCS_BRANCH=$(shell git symbolic-ref --short -q HEAD)
 
