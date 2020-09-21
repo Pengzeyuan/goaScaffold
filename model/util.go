@@ -26,17 +26,17 @@ func (s Strings) Value() (driver.Value, error) {
 }
 
 type BaseModel struct {
-	ID        int `gorm:"primary_key"`
+	ID        int `gorm:"primaryKey"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt *time.Time `sql:"index"`
+	DeletedAt *time.Time `gorm:"index"`
 }
 
 type BaseUUIDModel struct {
-	ID        string     `gorm:"primary_key;type:varchar(36);not null;"`
+	ID        string     `gorm:"primaryKey;type:varchar(36);not null;"`
 	CreatedAt time.Time  `msgpack:"-"`
 	UpdatedAt time.Time  `msgpack:"-"`
-	DeletedAt *time.Time `sql:"index" msgpack:"-"`
+	DeletedAt *time.Time `gorm:"index" msgpack:"-"`
 }
 
 func NewBaseUUIDModel() BaseUUIDModel {
