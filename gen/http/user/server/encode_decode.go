@@ -3,15 +3,15 @@
 // User HTTP server encoders and decoders
 //
 // Command:
-// $ goa gen starter/design
+// $ goa gen boot/design
 
 package server
 
 import (
+	user "boot/gen/user"
 	"context"
 	"io"
 	"net/http"
-	user "starter/gen/user"
 	"strings"
 
 	goahttp "goa.design/goa/v3/http"

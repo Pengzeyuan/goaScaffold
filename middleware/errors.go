@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"starter/config"
+	"boot/config"
 
 	"go.uber.org/zap"
 	goahttp "goa.design/goa/v3/http"

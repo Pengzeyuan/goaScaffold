@@ -1,4 +1,4 @@
-module starter
+module boot
 
 go 1.14
 

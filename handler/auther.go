@@ -1,4 +1,4 @@
-package controller
+package handler
 
 import (
 	"context"
@@ -9,9 +9,9 @@ import (
 	"git.chinaopen.ai/yottacloud/go-libs/jwt"
 	"goa.design/goa/v3/security"
 
-	"starter/config"
-	"starter/gen/log"
-	"starter/service"
+	"boot/config"
+	"boot/gen/log"
+	"boot/pkg/cache"
 )
 
 var (
@@ -22,7 +22,7 @@ var (
 
 type Auther struct {
 	logger *log.Logger
-	cache  *service.CacheService
+	cache  *cache.CacheService
 }
 
 // APIKeyAuth implements the authorization logic for service "rework" for the

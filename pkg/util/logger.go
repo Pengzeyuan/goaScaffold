@@ -3,7 +3,7 @@ package util
 import (
 	"context"
 
-	log "starter/gen/log"
+	log "boot/gen/log"
 
 	"go.uber.org/zap"
 	"goa.design/goa/v3/middleware"

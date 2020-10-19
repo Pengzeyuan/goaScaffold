@@ -3,7 +3,7 @@
 // User client HTTP transport
 //
 // Command:
-// $ goa gen starter/design
+// $ goa gen boot/design
 
 package client
 

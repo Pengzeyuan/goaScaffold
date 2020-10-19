@@ -3,7 +3,7 @@
 // HTTP request path constructors for the User service.
 //
 // Command:
-// $ goa gen starter/design
+// $ goa gen boot/design
 
 package client
 

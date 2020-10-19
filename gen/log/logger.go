@@ -3,7 +3,7 @@
 // Zap logger implementation
 //
 // Command:
-// $ goa gen starter/design
+// $ goa gen boot/design
 
 package log
 

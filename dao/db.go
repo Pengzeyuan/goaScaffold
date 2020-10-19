@@ -10,8 +10,8 @@ import (
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 
-	"starter/config"
-	"starter/model"
+	"boot/config"
+	"boot/model"
 )
 
 var DB *gorm.DB

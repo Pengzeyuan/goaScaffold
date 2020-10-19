@@ -1,10 +1,10 @@
-package controller
+package handler
 
 import (
 	"context"
 
-	"starter/config"
-	"starter/gen/log"
+	"boot/config"
+	"boot/gen/log"
 
 	"go.uber.org/zap"
 	"goa.design/goa/v3/middleware"

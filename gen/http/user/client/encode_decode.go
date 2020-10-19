@@ -3,17 +3,17 @@
 // User HTTP client encoders and decoders
 //
 // Command:
-// $ goa gen starter/design
+// $ goa gen boot/design
 
 package client
 
 import (
+	user "boot/gen/user"
 	"bytes"
 	"context"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	user "starter/gen/user"
 	"strings"
 
 	goahttp "goa.design/goa/v3/http"

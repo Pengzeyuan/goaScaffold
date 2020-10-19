@@ -1,10 +1,10 @@
-package controller
+package handler
 
 import (
 	"context"
 
-	log "starter/gen/log"
-	user "starter/gen/user"
+	log "boot/gen/log"
+	user "boot/gen/user"
 )
 
 // User service example implementation.

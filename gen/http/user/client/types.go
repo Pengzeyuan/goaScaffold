@@ -3,12 +3,12 @@
 // User HTTP client types
 //
 // Command:
-// $ goa gen starter/design
+// $ goa gen boot/design
 
 package client
 
 import (
-	user "starter/gen/user"
+	user "boot/gen/user"
 
 	goa "goa.design/goa/v3/pkg"
 )

@@ -1,5 +1,5 @@
 [Unit]
-Description=Starter Service
+Description=Boot Service
 After=network.target
 
 [Service]
@@ -10,7 +10,7 @@ RestartSec=5s
 LimitCORE=infinity
 LimitNOFILE=100000
 LimitNPROC=100000
-ExecStart=/usr/local/bin/starter --config /etc/starter/config.yml runserver
+ExecStart=/usr/local/bin/boot --config /etc/boot/config.yml runserver
 
 [Install]
 WantedBy=multi-user.target

@@ -5,13 +5,13 @@ import (
 	_ "goa.design/plugins/v3/zaplogger"
 )
 
-var _ = API("starter", func() {
+var _ = API("boot", func() {
 	Title("微服务")
 	HTTP(func() {
 		Path("/api")
 	})
 
-	Server("starter", func() {
+	Server("boot", func() {
 		Description("微服务")
 		Services("User")
 

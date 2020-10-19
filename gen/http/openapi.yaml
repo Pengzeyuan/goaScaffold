@@ -194,14 +194,14 @@ definitions:
       captchaId:
         type: string
         description: 验证码ID
-        example: At debitis omnis itaque aut nisi in.
+        example: Quisquam repudiandae pariatur quis error.
       image:
         type: string
         description: 图片base64
-        example: Iste fugit qui assumenda repudiandae.
+        example: Doloremque tempora iure est.
     example:
-      captchaId: Debitis libero et.
-      image: Harum quibusdam quos dolorem consequatur hic.
+      captchaId: Delectus recusandae doloribus.
+      image: Autem dolor fugiat maxime nulla et.
     required:
     - image
     - captchaId
@@ -238,11 +238,11 @@ definitions:
         expires_in: 25200
         token: eyJhbGciOiJIUz...
       user:
-        id: Laboriosam provident.
+        id: Sit aperiam mollitia sint facilis sint ipsum.
         isActive: false
-        mobile: Et in.
-        nickname: Nihil consectetur.
-        username: Omnis nihil quisquam.
+        mobile: Sapiente aut id labore exercitationem eligendi.
+        nickname: Consequatur est ab quia eligendi possimus.
+        username: Ratione est ea dolorum non magnam.
     required:
     - user
     - credentials
@@ -266,7 +266,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the problem.
@@ -282,7 +282,7 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
@@ -294,7 +294,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: false
+      timeout: true
     required:
     - name
     - id
@@ -309,7 +309,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the problem.
@@ -329,15 +329,15 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: GetCaptchaImage_internal_server_error_Response_Body result type (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
-      timeout: false
+      temporary: true
+      timeout: true
     required:
     - name
     - id
@@ -363,8 +363,8 @@ definitions:
         example: ""
     example:
       data:
-        captchaId: Rerum neque sunt id.
-        image: Placeat id rerum voluptatem et.
+        captchaId: Aut non eos sunt consequatur.
+        image: Ullam vero quia mollitia necessitatibus velit maiores.
       errcode: 0
       errmsg: ""
     required:
@@ -397,15 +397,15 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: LoginBySmsCode_bad_request_Response_Body result type (default view)
     example:
       fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
-      timeout: true
+      temporary: false
+      timeout: false
     required:
     - name
     - id
@@ -443,12 +443,12 @@ definitions:
         example: true
     description: LoginBySmsCode_internal_server_error_Response_Body result type (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: false
+      timeout: true
     required:
     - name
     - id
@@ -500,11 +500,11 @@ definitions:
           expires_in: 25200
           token: eyJhbGciOiJIUz...
         user:
-          id: Porro quaerat veniam qui qui exercitationem quod.
+          id: Eum fugiat nesciunt velit.
           isActive: true
-          mobile: Voluptas qui placeat amet qui.
-          nickname: Distinctio sit voluptas deleniti.
-          username: Soluta sit non quo illo aut est.
+          mobile: Voluptas quasi.
+          nickname: Officiis sunt eum et repellat itaque itaque.
+          username: Magni quia.
       errcode: 0
       errmsg: ""
     required:
@@ -517,7 +517,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the problem.
@@ -533,19 +533,19 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
         example: false
     description: LoginByUsername_bad_request_Response_Body result type (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
-      timeout: false
+      temporary: true
+      timeout: true
     required:
     - name
     - id
@@ -580,10 +580,10 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: LoginByUsername_internal_server_error_Response_Body result type (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
@@ -604,14 +604,14 @@ definitions:
         type: string
         description: 图形验证码ID
         default: ""
-        example: p
+        example: o92
         minLength: 1
         maxLength: 128
       humanCode:
         type: string
         description: 图形验证码
         default: ""
-        example: x62
+        example: 5ru
         minLength: 4
         maxLength: 8
       password:
@@ -627,8 +627,8 @@ definitions:
         minLength: 1
         maxLength: 128
     example:
-      captchaId: qlk
-      humanCode: saz
+      captchaId: k
+      humanCode: zkv
       password: password
       username: user
     required:
@@ -656,11 +656,11 @@ definitions:
           expires_in: 25200
           token: eyJhbGciOiJIUz...
         user:
-          id: Porro quaerat veniam qui qui exercitationem quod.
+          id: Eum fugiat nesciunt velit.
           isActive: true
-          mobile: Voluptas qui placeat amet qui.
-          nickname: Distinctio sit voluptas deleniti.
-          username: Soluta sit non quo illo aut est.
+          mobile: Voluptas quasi.
+          nickname: Officiis sunt eum et repellat itaque itaque.
+          username: Magni quia.
       errcode: 0
       errmsg: ""
     required:
@@ -673,30 +673,30 @@ definitions:
       id:
         type: string
         description: ID
-        example: Excepturi nesciunt adipisci libero autem.
+        example: Saepe nemo dignissimos sit.
       isActive:
         type: boolean
         description: 是否可用
-        example: true
+        example: false
       mobile:
         type: string
         description: 手机号
-        example: Quam ullam qui quisquam non.
+        example: Hic facilis.
       nickname:
         type: string
         description: 昵称
-        example: Velit eum.
+        example: Sit voluptatem.
       username:
         type: string
         description: 用户名
-        example: Nobis nihil voluptates placeat.
+        example: Ut suscipit excepturi expedita voluptate sit.
     description: 用户
     example:
-      id: Magnam mollitia tempore maxime saepe eveniet.
-      isActive: true
-      mobile: Mollitia et sapiente aut sequi.
-      nickname: Aut nulla.
-      username: Molestias cum temporibus ex et.
+      id: Magni magni odit sit est debitis.
+      isActive: false
+      mobile: Sit quaerat quo.
+      nickname: Cum repellendus.
+      username: Inventore libero at.
     required:
     - id
     - username
@@ -726,19 +726,19 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: SendSmsCode_bad_request_Response_Body result type (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
-      timeout: false
+      temporary: true
+      timeout: true
     required:
     - name
     - id
@@ -773,15 +773,15 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: SendSmsCode_internal_server_error_Response_Body result type (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: false
+      timeout: true
     required:
     - name
     - id
@@ -796,25 +796,25 @@ definitions:
       captchaId:
         type: string
         description: 图形验证码ID
-        example: f
+        example: tj6
         minLength: 1
         maxLength: 128
       humanCode:
         type: string
         description: 图形验证码
-        example: 14k
+        example: 3ad
         minLength: 4
         maxLength: 8
       mobile:
         type: string
         description: 手机号
-        example: yny
+        example: "761"
         minLength: 11
         maxLength: 11
     example:
-      captchaId: w65
-      humanCode: csg
-      mobile: hr4
+      captchaId: vl
+      humanCode: fe6
+      mobile: wlf
     required:
     - mobile
     - humanCode
@@ -850,7 +850,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the problem.
@@ -866,14 +866,14 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: UpdatePassword_bad_request_Response_Body result type (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
@@ -893,7 +893,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the problem.
@@ -913,14 +913,14 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: UpdatePassword_internal_server_error_Response_Body result type (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
+      temporary: true
       timeout: true
     required:
     - name

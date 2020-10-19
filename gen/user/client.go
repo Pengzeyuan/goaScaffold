@@ -3,7 +3,7 @@
 // User client
 //
 // Command:
-// $ goa gen starter/design
+// $ goa gen boot/design
 
 package user
 

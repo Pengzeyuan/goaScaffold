@@ -22,8 +22,8 @@ paths:
                 $ref: '#/components/schemas/GetCaptchaImageResponseBody'
               example:
                 data:
-                  captchaId: Rerum neque sunt id.
-                  image: Placeat id rerum voluptatem et.
+                  captchaId: Aut non eos sunt consequatur.
+                  image: Ullam vero quia mollitia necessitatibus velit maiores.
                 errcode: 0
                 errmsg: ""
         "400":
@@ -37,8 +37,8 @@ paths:
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: false
-                timeout: false
+                temporary: true
+                timeout: true
         "500":
           description: ""
           content:
@@ -46,7 +46,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
+                fault: true
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
@@ -81,11 +81,11 @@ paths:
                     expires_in: 25200
                     token: eyJhbGciOiJIUz...
                   user:
-                    id: Porro quaerat veniam qui qui exercitationem quod.
+                    id: Eum fugiat nesciunt velit.
                     isActive: true
-                    mobile: Voluptas qui placeat amet qui.
-                    nickname: Distinctio sit voluptas deleniti.
-                    username: Soluta sit non quo illo aut est.
+                    mobile: Voluptas quasi.
+                    nickname: Officiis sunt eum et repellat itaque itaque.
+                    username: Magni quia.
                 errcode: 0
                 errmsg: ""
         "400":
@@ -95,12 +95,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
+                fault: false
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: false
-                timeout: true
+                temporary: true
+                timeout: false
         "500":
           description: ""
           content:
@@ -108,7 +108,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
+                fault: true
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
@@ -128,8 +128,8 @@ paths:
             schema:
               $ref: '#/components/schemas/LoginByUsernameRequestBody'
             example:
-              captchaId: 2qb
-              humanCode: 7wt
+              captchaId: ar5
+              humanCode: apa
               password: password
               username: user
       responses:
@@ -145,14 +145,27 @@ paths:
                     expires_in: 25200
                     token: eyJhbGciOiJIUz...
                   user:
-                    id: Porro quaerat veniam qui qui exercitationem quod.
+                    id: Eum fugiat nesciunt velit.
                     isActive: true
-                    mobile: Voluptas qui placeat amet qui.
-                    nickname: Distinctio sit voluptas deleniti.
-                    username: Soluta sit non quo illo aut est.
+                    mobile: Voluptas quasi.
+                    nickname: Officiis sunt eum et repellat itaque itaque.
+                    username: Magni quia.
                 errcode: 0
                 errmsg: ""
         "400":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: true
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: true
+                timeout: true
+        "500":
           description: ""
           content:
             application/vnd.goa.error:
@@ -164,20 +177,7 @@ paths:
                 message: parameter 'p' must be an integer
                 name: bad_request
                 temporary: false
-                timeout: false
-        "500":
-          description: ""
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                fault: true
-                id: 123abc
-                message: parameter 'p' must be an integer
-                name: bad_request
-                temporary: false
-                timeout: false
+                timeout: true
   /api/user/send_sms_code:
     post:
       tags:
@@ -192,9 +192,9 @@ paths:
             schema:
               $ref: '#/components/schemas/SendSmsCodeRequestBody'
             example:
-              captchaId: 4v
-              humanCode: ir6
-              mobile: 7qw
+              captchaId: h
+              humanCode: w5e
+              mobile: nqo
       responses:
         "200":
           description: ""
@@ -214,7 +214,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
+                fault: true
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
@@ -231,7 +231,7 @@ paths:
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: true
+                temporary: false
                 timeout: false
   /api/user/update_password:
     post:
@@ -273,7 +273,7 @@ paths:
                 message: parameter 'p' must be an integer
                 name: bad_request
                 temporary: true
-                timeout: false
+                timeout: true
         "500":
           description: ""
           content:
@@ -299,14 +299,14 @@ components:
         captchaId:
           type: string
           description: 验证码ID
-          example: Dolorem et recusandae.
+          example: Et aut a praesentium tenetur explicabo maiores.
         image:
           type: string
           description: 图片base64
-          example: Sit esse quo sint.
+          example: Et labore doloribus impedit cupiditate hic.
       example:
-        captchaId: Nulla in iste et itaque aliquid nisi.
-        image: Occaecati nesciunt in et.
+        captchaId: Ullam impedit repellendus eveniet sed aliquid enim.
+        image: Numquam ex quasi dolores distinctio voluptate ea.
       required:
       - image
       - captchaId
@@ -350,17 +350,17 @@ components:
         temporary:
           type: boolean
           description: Is the error temporary?
-          example: true
+          example: false
         timeout:
           type: boolean
           description: Is the error a timeout?
-          example: true
+          example: false
       example:
         fault: true
         id: 123abc
         message: parameter 'p' must be an integer
         name: bad_request
-        temporary: false
+        temporary: true
         timeout: false
       required:
       - name
@@ -386,8 +386,8 @@ components:
           example: ""
       example:
         data:
-          captchaId: Rerum neque sunt id.
-          image: Placeat id rerum voluptatem et.
+          captchaId: Aut non eos sunt consequatur.
+          image: Ullam vero quia mollitia necessitatibus velit maiores.
         errcode: 0
         errmsg: ""
       required:
@@ -421,14 +421,14 @@ components:
           type: string
           description: 图形验证码ID
           default: ""
-          example: iw0
+          example: w5m
           minLength: 1
           maxLength: 128
         humanCode:
           type: string
           description: 图形验证码
           default: ""
-          example: vbb
+          example: "541"
           minLength: 4
           maxLength: 8
         password:
@@ -444,8 +444,8 @@ components:
           minLength: 1
           maxLength: 128
       example:
-        captchaId: tc
-        humanCode: 8b6
+        captchaId: e5
+        humanCode: lvj
         password: password
         username: user
       required:
@@ -472,11 +472,11 @@ components:
             expires_in: 25200
             token: eyJhbGciOiJIUz...
           user:
-            id: Porro quaerat veniam qui qui exercitationem quod.
+            id: Eum fugiat nesciunt velit.
             isActive: true
-            mobile: Voluptas qui placeat amet qui.
-            nickname: Distinctio sit voluptas deleniti.
-            username: Soluta sit non quo illo aut est.
+            mobile: Voluptas quasi.
+            nickname: Officiis sunt eum et repellat itaque itaque.
+            username: Magni quia.
         errcode: 0
         errmsg: ""
       required:
@@ -488,25 +488,25 @@ components:
         captchaId:
           type: string
           description: 图形验证码ID
-          example: zf
+          example: r93
           minLength: 1
           maxLength: 128
         humanCode:
           type: string
           description: 图形验证码
-          example: tzx
+          example: ruu
           minLength: 4
           maxLength: 8
         mobile:
           type: string
           description: 手机号
-          example: r3h
+          example: wnc
           minLength: 11
           maxLength: 11
       example:
-        captchaId: 4l
-        humanCode: 5rf
-        mobile: 7y8
+        captchaId: 4ee
+        humanCode: 0a3
+        mobile: yhb
       required:
       - mobile
       - humanCode
@@ -524,11 +524,11 @@ components:
           expires_in: 25200
           token: eyJhbGciOiJIUz...
         user:
-          id: Porro quaerat veniam qui qui exercitationem quod.
+          id: Eum fugiat nesciunt velit.
           isActive: true
-          mobile: Voluptas qui placeat amet qui.
-          nickname: Distinctio sit voluptas deleniti.
-          username: Soluta sit non quo illo aut est.
+          mobile: Voluptas quasi.
+          nickname: Officiis sunt eum et repellat itaque itaque.
+          username: Magni quia.
       required:
       - user
       - credentials
@@ -592,7 +592,7 @@ components:
         id:
           type: string
           description: ID
-          example: Nemo id totam.
+          example: Vero quisquam corporis nemo sit.
         isActive:
           type: boolean
           description: 是否可用
@@ -600,22 +600,22 @@ components:
         mobile:
           type: string
           description: 手机号
-          example: Fuga voluptatem.
+          example: Quia ullam earum consequatur.
         nickname:
           type: string
           description: 昵称
-          example: Officiis dolores quas magnam.
+          example: Aperiam soluta molestiae tenetur.
         username:
           type: string
           description: 用户名
-          example: Minima animi dolores.
+          example: Atque hic.
       description: 用户
       example:
-        id: Temporibus quaerat asperiores fugit.
-        isActive: false
-        mobile: Delectus odio perspiciatis architecto aut.
-        nickname: Et suscipit impedit occaecati pariatur sunt.
-        username: Quas fugit laborum veritatis sed.
+        id: Velit dolorem.
+        isActive: true
+        mobile: Et ducimus culpa hic officia dolore quia.
+        nickname: Eius pariatur fuga iste adipisci iure.
+        username: Et rerum reiciendis aut voluptas ut.
       required:
       - id
       - username

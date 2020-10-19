@@ -7,9 +7,9 @@ import (
 	"github.com/lneoe/go-help-libs/version"
 	"github.com/spf13/cobra"
 
-	starterCmd "starter/cmd/starter"
-	"starter/config"
-	"starter/dao"
+	bootCmd "boot/cmd/boot"
+	"boot/config"
+	"boot/dao"
 
 	metricsMlwr "git.chinaopen.ai/yottacloud/go-libs/goa-libs/middleware/metrics"
 )
@@ -30,10 +30,10 @@ func serverCmd() *cobra.Command {
 
 			// pprof 这里启动失败会直接 panic
 			if config.C.Pprof.Enabled {
-				go starterCmd.RunDebugPprofServer(config.C.Pprof.Addr)
+				go bootCmd.RunDebugPprofServer(config.C.Pprof.Addr)
 			}
 
-			starterCmd.RunServer(config.C, metrics)
+			bootCmd.RunServer(config.C, metrics)
 
 			return nil
 		},
@@ -70,7 +70,7 @@ func versionCmd() *cobra.Command {
 
 func main() {
 	var RootCmd = cobra.Command{
-		Use: "starter",
+		Use: "boot",
 	}
 
 	RootCmd.AddCommand(serverCmd())

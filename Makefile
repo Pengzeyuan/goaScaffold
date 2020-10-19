@@ -1,9 +1,9 @@
 # workdir info
-PACKAGE=starter
+PACKAGE=boot
 PREFIX=$(shell pwd)
 CMD_PACKAGE=${PACKAGE}/cmd
 OUTPUT_DIR=${PREFIX}/bin
-OUTPUT_FILE=${OUTPUT_DIR}/starter
+OUTPUT_FILE=${OUTPUT_DIR}/boot
 COMMIT_ID=$(shell git rev-parse --short HEAD)
 VERSION=$(shell git describe --tags || echo "v0.0.0")
 VERSION_IMPORT_PATH=git.chinaopen.ai/library/go-help-libs/version
@@ -77,4 +77,4 @@ release:
 	@echo "+ $@"
 	@make build
 	@mkdir -p dist/
-	@tar -zcvf dist/starter-${VERSION}.tar.gz README.md -C bin/ starter -C ../config/ config.sample.yml starter.service
+	@tar -zcvf dist/boot-${VERSION}.tar.gz README.md -C bin/ boot -C ../config/ config.sample.yml boot.service

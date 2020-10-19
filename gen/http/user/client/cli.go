@@ -3,14 +3,14 @@
 // User HTTP client CLI support package
 //
 // Command:
-// $ goa gen starter/design
+// $ goa gen boot/design
 
 package client
 
 import (
+	user "boot/gen/user"
 	"encoding/json"
 	"fmt"
-	user "starter/gen/user"
 	"unicode/utf8"
 
 	goa "goa.design/goa/v3/pkg"
@@ -24,7 +24,7 @@ func BuildLoginByUsernamePayload(userLoginByUsernameBody string) (*user.LoginByU
 	{
 		err = json.Unmarshal([]byte(userLoginByUsernameBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"captchaId\": \"2qb\",\n      \"humanCode\": \"7wt\",\n      \"password\": \"password\",\n      \"username\": \"user\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"captchaId\": \"ar5\",\n      \"humanCode\": \"apa\",\n      \"password\": \"password\",\n      \"username\": \"user\"\n   }'")
 		}
 		if utf8.RuneCountInString(body.Username) < 1 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.username", body.Username, utf8.RuneCountInString(body.Username), 1, true))
@@ -145,7 +145,7 @@ func BuildSendSmsCodePayload(userSendSmsCodeBody string) (*user.SendSmsCodePaylo
 	{
 		err = json.Unmarshal([]byte(userSendSmsCodeBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"captchaId\": \"4v\",\n      \"humanCode\": \"ir6\",\n      \"mobile\": \"7qw\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"captchaId\": \"h\",\n      \"humanCode\": \"w5e\",\n      \"mobile\": \"nqo\"\n   }'")
 		}
 		if utf8.RuneCountInString(body.Mobile) < 11 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.mobile", body.Mobile, utf8.RuneCountInString(body.Mobile), 11, true))

@@ -1,7 +1,7 @@
-package service
+package cache
 
 import (
-	"starter/config"
+	"boot/config"
 
 	"time"
 

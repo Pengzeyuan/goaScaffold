@@ -10,10 +10,10 @@ import (
 	"os/signal"
 	"sync"
 
-	"starter/config"
-	controller "starter/controller"
-	log "starter/gen/log"
-	"starter/gen/user"
+	"boot/config"
+	log "boot/gen/log"
+	"boot/gen/user"
+	"boot/handler"
 
 	metricsMlwr "git.chinaopen.ai/yottacloud/go-libs/goa-libs/middleware/metrics"
 	"git.chinaopen.ai/yottacloud/go-libs/panichandler"
@@ -35,7 +35,7 @@ func RunServer(cfg *config.Config, metrics *metricsMlwr.Prometheus) {
 		userSvc user.Service
 	)
 	{
-		userSvc = controller.NewUser(logger)
+		userSvc = handler.NewUser(logger)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services

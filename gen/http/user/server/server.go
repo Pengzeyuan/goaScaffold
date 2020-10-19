@@ -3,14 +3,14 @@
 // User HTTP server
 //
 // Command:
-// $ goa gen starter/design
+// $ goa gen boot/design
 
 package server
 
 import (
+	user "boot/gen/user"
 	"context"
 	"net/http"
-	user "starter/gen/user"
 
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"

@@ -1,4 +1,4 @@
-package service
+package sms
 
 import (
 	"errors"
@@ -14,10 +14,10 @@ import (
 	"github.com/go-redis/redis_rate/v8"
 	"go.uber.org/zap"
 
-	"starter/config"
-	"starter/gen/log"
-	"starter/util"
-	"starter/util/qcloudsms"
+	"boot/config"
+	"boot/gen/log"
+	"boot/pkg/util"
+	"boot/pkg/util/qcloudsms"
 )
 
 const (

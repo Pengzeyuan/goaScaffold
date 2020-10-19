@@ -13,10 +13,10 @@ import (
 	httpmdlwr "goa.design/goa/v3/http/middleware"
 	"goa.design/goa/v3/middleware"
 
-	usersvr "starter/gen/http/user/server"
-	log "starter/gen/log"
-	"starter/gen/user"
-	mdlwr "starter/middleware"
+	usersvr "boot/gen/http/user/server"
+	log "boot/gen/log"
+	"boot/gen/user"
+	mdlwr "boot/middleware"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
