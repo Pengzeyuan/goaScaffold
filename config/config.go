@@ -7,21 +7,22 @@ import (
 
 	"git.chinaopen.ai/yottacloud/go-libs/jwt"
 	"git.chinaopen.ai/yottacloud/go-libs/redis"
-	"git.chinaopen.ai/yottacloud/tif"
+
+	// "git.chinaopen.ai/yottacloud/tif"
 	"github.com/jinzhu/configor"
 	"go.uber.org/zap"
 )
 
 type Config struct {
-	Debug      bool             `yaml:"debug,omitempty" default:"false" `
-	Metrics    metricsConfig    `yaml:"metrics,omitempty"`
-	Pprof      pprofConfig      `yaml:"pprof,omitempty"`
-	Logger     LoggerConfig     `yaml:"logger,omitempty"`
-	Database   DatabaseConfig   `yaml:"database,omitempty"`
-	Redis      redis.Conf       `yaml:"redis,omitempty"`
-	Server     ServerConfig     `yaml:"server,omitempty"`
-	Jwt        JwtConfig        `yaml:"jwt,omitempty"`
-	Tif        tif.Config       `yaml:"tif,omitempty"`
+	Debug    bool           `yaml:"debug,omitempty" default:"false" `
+	Metrics  metricsConfig  `yaml:"metrics,omitempty"`
+	Pprof    pprofConfig    `yaml:"pprof,omitempty"`
+	Logger   LoggerConfig   `yaml:"logger,omitempty"`
+	Database DatabaseConfig `yaml:"database,omitempty"`
+	Redis    redis.Conf     `yaml:"redis,omitempty"`
+	Server   ServerConfig   `yaml:"server,omitempty"`
+	Jwt      JwtConfig      `yaml:"jwt,omitempty"`
+	// Tif        tif.Config       `yaml:"tif,omitempty"`
 	Cache      CacheConfig      `yaml:"cache,omitempty"`
 	Sms        TencentSmsConfig `yaml:"sms,omitempty"`
 	VerifyCode VerifyCodeConfig `yaml:"verify_code,omitempty"`
