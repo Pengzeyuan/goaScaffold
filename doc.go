@@ -1,1 +1,1 @@
-package starter
+package boot

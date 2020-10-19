@@ -1,6 +1,6 @@
 module boot
 
-go 1.14
+go 1.15
 
 require (
 	git.chinaopen.ai/yottacloud/go-libs v1.0.1

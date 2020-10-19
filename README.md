@@ -4,7 +4,7 @@
 
 - mysql 5.7+
 - redis 4.0+
-- golang 1.13
+- golang 1.15
 
 ### 配置
 
@@ -19,7 +19,7 @@ make build
 ### 启动服务
 
 ```shell
-starter --config config.yml runserver
+boot --config config.yml runserver
 ```
 
 ### 接口文档
