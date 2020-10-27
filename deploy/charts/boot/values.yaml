@@ -1,0 +1,42 @@
+replicaCount: 1
+
+image:
+  repository: hub.chinaopen.ai/iot/boot
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: dev
+
+imagePullSecrets: 
+  - name: hub-chinaopen-ai
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port:
+    http: 8080
+    grpc: 8082
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 128Mi
+  requests:
+    cpu: 20m
+    memory: 10Mi
+
+initContainer:
+  resources:
+    limits:
+      cpu: 200m
+      memory: 128Mi
+    requests:
+      cpu: 20m
+      memory: 10Mi
+
+config:
+  LOGGER_LEVEL: debug # debug or info
+  DATABASE_DSN: postgres://user:pass@postgresql:5432/aurora_dev?sslmode=disable
+  DATABASE_LOGMODE: "false"
+  REDIS_URI: redis://redis:6379/1
+  JWT_SECRET: todo

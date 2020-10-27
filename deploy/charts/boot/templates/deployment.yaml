@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: {{- include "boot.labels" . | nindent 4 }}
+  name: {{ include "boot.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "boot.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "boot.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+      containers:
+        - image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /app/boot
+          args:
+            - runserver
+          env:
+            {{- range $i, $v := .Values.config }}
+            - name: BOOT_{{ $i }}
+              value: "{{ $v }}"
+            {{- end }}
+          name: aurora
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+            - containerPort: 8082
+              name: grpc
+              protocol: TCP
+          resources: 
+            {{- toYaml .Values.resources | nindent 12 }}
+      dnsPolicy: ClusterFirst
+      initContainers:
+        - name: init
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: Always
+          command:
+            - migrate
+            - -path
+            - migrations
+            - --database=$(DATABASE_DSN)
+            - -verbose
+            - up
+          env:
+            - name: DATABASE_DSN
+              value: {{ .Values.config.DATABASE_DSN }}
+          resources: 
+            {{- toYaml .Values.initContainer.resources | nindent 12 }}

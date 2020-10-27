@@ -3,7 +3,7 @@ variables:
   MY_PROJECT_NAME: boot
   DOCKER_GROUP_NAME: yottacloud
   DOCKER_IMG_NAME: ${REGISTRY_HOST}/${DOCKER_GROUP_NAME}/${MY_PROJECT_NAME}
-  DOCKER_IMG_TAG: ${CI_COMMIT_SHORT_SHA}-${CI_BUILD_ID}
+  DOCKER_IMG_TAG: ${CI_COMMIT_SHORT_SHA}
 
 stages:
   - test
@@ -83,15 +83,17 @@ test:
 
 # deploy-dev:
 #   stage: deploy
-#   image: hub.chinaopen.ai/library/rancher-cli:v2.3.0_2
+#   dependencies: []
+#   image: hub.chinaopen.ai/library/argoproj/argocd:v1.7.8
 #   only:
 #     - master@yottacloud/boot
-#   dependencies: []
 
 #   script:
-#     - rancher login ${RANCHER_URL} --token ${RANCHER_TOKEN} --context ${RANCHER_PROJECT_ID}
-#     - rancher kubectl -n ${RANCHER_NAMESPACE} set env deployments -l app=${RANCHER_DEPLOY} DOCKER_BUILD_ID=${DOCKER_IMG_TAG} --overwrite=true
-#     - rancher kubectl -n ${RANCHER_NAMESPACE} get po -l app=${RANCHER_DEPLOY}
+#     - echo "require env ARGOCD_SERVER, ARGOCD_AUTH_TOKEN AND ARGCD_APP_SELECTOR"
+#     - export ARGOCD_SERVER=${ARGOCD_SERVER}
+#     - export ARGOCD_AUTH_TOKEN=${ARGOCD_AUTH_TOKEN}
+#     - argocd app list -l ${ARGCD_APP_SELECTOR} | grep -v "CLUSTER" | awk '{print $1}' | xargs argocd app set --helm-set image.tag=dev-${DOCKER_IMG_TAG} --helm-set config.BUILD_ID=${CI_JOB_ID}
+#     - argocd app sync -l ${ARGCD_APP_SELECTOR}
 
 release:
   stage: release
