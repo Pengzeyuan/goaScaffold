@@ -22,3 +22,5 @@ linters:
     - gofmt
     - goimports
     - lll
+    - nestif
+    - goconst
