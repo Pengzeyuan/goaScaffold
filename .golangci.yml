@@ -6,4 +6,19 @@ linters:
   # enable-all: true
   fast: false
   enable:
+    - deadcode
+    - errcheck
+    - gosimple 
+    - govet
+    - ineffassign 
+    - staticcheck 
+    - structcheck
+    - typecheck
+    - unused
+    - varcheck
     - errorlint
+    - wsl
+    - dogsled 
+    - gofmt
+    - goimports
+    - lll
