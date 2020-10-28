@@ -1,4 +1,4 @@
-FROM hub.chinaopen.ai/library/go-builder:1.13-alpine AS builder
+FROM hub.chinaopen.ai/library/go-builder:1.15-alpine AS builder
 
 ARG COMMIT_ID
 ARG VERSION=""

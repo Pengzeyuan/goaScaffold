@@ -13,7 +13,7 @@ stages:
 
 test:
   stage: test
-  image: hub.chinaopen.ai/library/go-builder:1.13-alpine
+  image: hub.chinaopen.ai/library/go-builder:1.15-alpine
   artifacts:
     name: ${CI_COMMIT_REF_SLUG}
     paths:
