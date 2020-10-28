@@ -1,3 +1,9 @@
 run:
   modules-download-mode: readonly
   include-go-root: true
+
+linters:
+  # enable-all: true
+  fast: false
+  enable:
+    - errorlint
