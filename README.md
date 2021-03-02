@@ -1,3 +1,4 @@
+
 ## Goa 微服务脚手架
 
 ### 依赖
@@ -27,3 +28,7 @@ boot --config config.yml runserver
 #### 错误码
 
 - 60001 参数错误
+
+# goaScaffold
+一个goa 的测试框架
+
