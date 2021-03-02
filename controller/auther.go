@@ -1,15 +1,12 @@
-package handler
+package boot
 
 import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
-
 	"git.chinaopen.ai/yottacloud/go-libs/jwt"
 	"goa.design/goa/v3/security"
 
-	"boot/config"
 	"boot/gen/log"
 	"boot/pkg/cache"
 )
@@ -71,19 +68,19 @@ func (a *Auther) JWTAuth(ctx context.Context, token string, scheme *security.JWT
 	return ctx, nil
 }
 
-// create JWT token
-func (a *Auther) createJwtToken(userID string, userType int, scopes []string) (string, error) {
-	userClaims := jwt.UserClaims{
-		ID:        userID,
-		Scopes:    scopes,
-		IssuedAt:  time.Now().Unix(),
-		ExpiresAt: time.Now().Add(time.Second * time.Duration(config.C.Jwt.ExpireIn)).Unix(),
-	}
-
-	// note that if "SignedString" returns an error then it is returned as
-	// an internal error to the client
-	return jwt.GetToken(userClaims)
-}
+//// create JWT token
+//func (a *Auther) createJwtToken(userID string, userType int, scopes []string) (string, error) {
+//	userClaims := jwt.UserClaims{
+//		ID:        userID,
+//		Scopes:    scopes,
+//		IssuedAt:  time.Now().Unix(),
+//		ExpiresAt: time.Now().Add(time.Second * time.Duration(config.C.Jwt.ExpireIn)).Unix(),
+//	}
+//
+//	// note that if "SignedString" returns an error then it is returned as
+//	// an internal error to the client
+//	return jwt.GetToken(userClaims)
+//}
 
 func (a *Auther) validateScopes(expected, actual []string) error {
 	for _, r := range expected {

@@ -9,24 +9,38 @@ import (
 	"git.chinaopen.ai/yottacloud/go-libs/redis"
 
 	// "git.chinaopen.ai/yottacloud/tif"
+	hallmanagementconf "boot/helper/thidPart/config"
 	"github.com/jinzhu/configor"
 	"go.uber.org/zap"
 )
 
 type Config struct {
-	Debug    bool           `yaml:"debug,omitempty" default:"false" `
-	Metrics  metricsConfig  `yaml:"metrics,omitempty"`
-	Pprof    pprofConfig    `yaml:"pprof,omitempty"`
-	Logger   LoggerConfig   `yaml:"logger,omitempty"`
-	Database DatabaseConfig `yaml:"database,omitempty"`
-	Redis    redis.Conf     `yaml:"redis,omitempty"`
-	Server   ServerConfig   `yaml:"server,omitempty"`
-	Jwt      JwtConfig      `yaml:"jwt,omitempty"`
+	DpDatabase  DatabaseConfig `yaml:"dp_database,omitempty"`
+	GinDatabase DatabaseConfig `yaml:"gin_database,omitempty"`
+	Debug       bool           `yaml:"debug,omitempty" default:"false" `
+	Metrics     metricsConfig  `yaml:"metrics,omitempty"`
+	Pprof       pprofConfig    `yaml:"pprof,omitempty"`
+	Logger      LoggerConfig   `yaml:"logger,omitempty"`
+	Database    DatabaseConfig `yaml:"database,omitempty"`
+	Redis       redis.Conf     `yaml:"redis,omitempty"`
+	Server      ServerConfig   `yaml:"server,omitempty"`
+	Jwt         JwtConfig      `yaml:"jwt,omitempty"`
 	// Tif        tif.Config       `yaml:"tif,omitempty"`
-	Cache      CacheConfig      `yaml:"cache,omitempty"`
-	Sms        TencentSmsConfig `yaml:"sms,omitempty"`
-	VerifyCode VerifyCodeConfig `yaml:"verify_code,omitempty"`
-	Salt       string           `yaml:"salt,omitempty" default:"starter" `
+	Cache                  CacheConfig                               `yaml:"cache,omitempty"`
+	Sms                    TencentSmsConfig                          `yaml:"sms,omitempty"`
+	VerifyCode             VerifyCodeConfig                          `yaml:"verify_code,omitempty"`
+	Salt                   string                                    `yaml:"salt,omitempty" default:"starter" `
+	Nats                   NatsConf                                  `yaml:"nats,omitempty"`
+	Canal                  CanalConf                                 `yaml:"canal,omitempty"`
+	HallManagementDataConf hallmanagementconf.HallManagementDataConf `yaml:"hallManagement_remote,omitempty"`
+}
+
+type CanalConf struct {
+	Host        string `yaml:"host,omitempty" default:"127.0.0.1"`
+	Port        int    `yaml:"port,omitempty" default:"8086"`
+	Destination string `yaml:"destination,omitempty" default:"example"`
+	SoTimeOut   int32  `yaml:"so_time_out,omitempty" default:"60000"`
+	IdleTimeOut int32  `yaml:"idle_time_out,omitempty" default:"60*60*1000"`
 }
 
 type DatabaseConfig struct {
@@ -47,9 +61,10 @@ type LoggerConfig struct {
 }
 
 type ServerConfig struct {
-	Host     string `yaml:"host,omitempty" default:"0.0.0.0"`
-	HTTPPort string `yaml:"http_port,omitempty" default:"8080"`
-	GrpcPort string `yaml:"grpc_port,omitempty" default:"8082"`
+	Host          string `yaml:"host,omitempty" default:"0.0.0.0"`
+	HTTPPort      string `yaml:"http_port,omitempty" default:"8080"`
+	GrpcPort      string `yaml:"grpc_port,omitempty" default:"8082"`
+	WebsocketPort int    `yaml:"websocket_port,omitempty" default:"8083"`
 }
 
 type CacheConfig struct {
@@ -111,6 +126,12 @@ type metricsConfig struct {
 type pprofConfig struct {
 	Enabled bool   `yaml:"enabled" default:"false"`
 	Addr    string `yaml:"Addr" default:"127.0.0.1:32999"`
+}
+
+type NatsConf struct {
+	Urls          string `yaml:"urls,omitempty" default:"nats://127.0.0.1:4222"`
+	CallNoSubject string `yaml:"call_no_subject,omitempty" default:"one_no_notice"`
+	CanalSubject  string `yaml:"canal_subject,omitempty" default:"one_no_notice"`
 }
 
 func initLogger(debug bool, level, output string) {

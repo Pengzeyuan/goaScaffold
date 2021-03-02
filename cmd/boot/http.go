@@ -17,12 +17,26 @@ import (
 	log "boot/gen/log"
 	"boot/gen/user"
 	mdlwr "boot/middleware"
+
+	entityhall "boot/gen/entity_hall"
+	entityhallsvr "boot/gen/http/entity_hall/server"
+
+	actualtime "boot/gen/actual_time"
+	actualtimesvr "boot/gen/http/actual_time/server"
+
+	thirdpartsvr "boot/gen/http/third_part/server"
+	thirdpart "boot/gen/third_part"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, host string, userEndpoints *user.Endpoints, wg *sync.WaitGroup,
-	errc chan error, logger *log.Logger, metrics *metrics.Prometheus, debug bool) {
+func handleHTTPServer(ctx context.Context, host string,
+	userEndpoints *user.Endpoints,
+	entityhallEndpoints *entityhall.Endpoints,
+	actualTimeEndpoints *actualtime.Endpoints,
+	thirdpartEndpoints *thirdpart.Endpoints,
+	wg *sync.WaitGroup, errc chan error,
+	logger *log.Logger, metrics *metrics.Prometheus, debug bool) {
 
 	// Setup goa log adapter.
 	var (
@@ -53,15 +67,23 @@ func handleHTTPServer(ctx context.Context, host string, userEndpoints *user.Endp
 	// the service input and output data structures to HTTP requests and
 	// responses.
 	var (
-		userServer *usersvr.Server
+		userServer       *usersvr.Server
+		entityhallServer *entityhallsvr.Server
+		actualTimeServer *actualtimesvr.Server
+		thirdpartServer  *thirdpartsvr.Server
 	)
 	{
 		eh := errorHandler(logger)
 		userServer = usersvr.New(userEndpoints, mux, dec, enc, eh, mdlwr.GoaErrorFormatterFunc)
+		entityhallServer = entityhallsvr.New(entityhallEndpoints, mux, dec, enc, eh, mdlwr.GoaErrorFormatterFunc)
+		actualTimeServer = actualtimesvr.New(actualTimeEndpoints, mux, dec, enc, eh, mdlwr.GoaErrorFormatterFunc)
+		thirdpartServer = thirdpartsvr.New(thirdpartEndpoints, mux, dec, enc, eh, mdlwr.GoaErrorFormatterFunc)
 	}
 	// Configure the mux.
 	usersvr.Mount(mux, userServer)
-
+	entityhallsvr.Mount(mux, entityhallServer)
+	actualtimesvr.Mount(mux, actualTimeServer)
+	thirdpartsvr.Mount(mux, thirdpartServer)
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
 	// here apply to all the service endpoints.
 	var handler http.Handler = mux
@@ -87,6 +109,12 @@ func handleHTTPServer(ctx context.Context, host string, userEndpoints *user.Endp
 		logger.Infof("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
 
+	for _, m := range entityhallServer.Mounts {
+		logger.Infof("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
+	}
+	for _, m := range actualTimeServer.Mounts {
+		logger.Infof("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
+	}
 	(*wg).Add(1)
 	go func() {
 		defer (*wg).Done()

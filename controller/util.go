@@ -1,4 +1,4 @@
-package handler
+package boot
 
 import (
 	"context"
@@ -32,6 +32,20 @@ func L(ctx context.Context, logger *log.Logger) *zap.Logger {
 // 创建内部错误
 func MakeInternalServerError(ctx context.Context, errmsg string) *goa.ServiceError {
 	if errmsg == "" || !config.C.Debug {
+		errmsg = "服务器开小差了，稍后再试吧"
+	}
+
+	return &goa.ServiceError{
+		Name:    "internal_server_error",
+		ID:      getErrorID(ctx),
+		Message: errmsg,
+		Fault:   true,
+	}
+}
+
+// 创建登录错误
+func MakeLoginError(ctx context.Context, errmsg string) *goa.ServiceError {
+	if errmsg == "" {
 		errmsg = "服务器开小差了，稍后再试吧"
 	}
 

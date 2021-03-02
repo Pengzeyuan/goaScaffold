@@ -34,7 +34,10 @@ var User = ResultType("User", func() {
 		Attribute("nickname", String, "昵称")
 		Attribute("mobile", String, "手机号")
 		Attribute("isActive", Boolean, "是否可用")
+		Attribute("loginTime", String, "登陆时间", func() {
+			Default("00:00:00")
 
+		})
 		Required("id", "username", "nickname", "mobile",
 			"isActive")
 	})
@@ -45,6 +48,7 @@ var User = ResultType("User", func() {
 		Attribute("nickname")
 		Attribute("mobile")
 		Attribute("isActive")
+		Attribute("loginTime")
 	})
 })
 
@@ -64,7 +68,8 @@ var Session = ResultType("Session", func() {
 	Attributes(func() {
 		Field(1, "user", User)
 		Field(2, "credentials", Credentials)
-		Required("user", "credentials")
+		Field(3, "cookie", String)
+		Required("user", "credentials", "cookie")
 	})
 
 	View("default", func() {

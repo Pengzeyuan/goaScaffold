@@ -1,6 +1,7 @@
 package starter
 
 import (
+	thirdpart "boot/gen/third_part"
 	"context"
 	"fmt"
 	"net/http"
@@ -11,13 +12,17 @@ import (
 	"sync"
 
 	"boot/config"
+	controller "boot/controller"
 	log "boot/gen/log"
 	"boot/gen/user"
-	"boot/handler"
 
 	metricsMlwr "git.chinaopen.ai/yottacloud/go-libs/goa-libs/middleware/metrics"
 	"git.chinaopen.ai/yottacloud/go-libs/panichandler"
 	"go.uber.org/zap"
+
+	entityhall "boot/gen/entity_hall"
+
+	actualtime "boot/gen/actual_time"
 )
 
 func RunServer(cfg *config.Config, metrics *metricsMlwr.Prometheus) {
@@ -32,19 +37,31 @@ func RunServer(cfg *config.Config, metrics *metricsMlwr.Prometheus) {
 
 	// Initialize the services.
 	var (
-		userSvc user.Service
+		userSvc       user.Service
+		entityHallSvc entityhall.Service
+		actualTimeSvc actualtime.Service
+		thirdpartSvc  thirdpart.Service
 	)
 	{
-		userSvc = handler.NewUser(logger)
+		userSvc = controller.NewUser(logger)
+		entityHallSvc = controller.NewEntityHall(logger)
+		actualTimeSvc = controller.NewActualTime(logger)
+		thirdpartSvc = controller.NewThirdPart(logger)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
 	var (
-		userEndpoints *user.Endpoints
+		userEndpoints       *user.Endpoints
+		entityHallEndpoints *entityhall.Endpoints
+		actualTimeEndpoints *actualtime.Endpoints
+		thirdPartEndpoints  *thirdpart.Endpoints
 	)
 	{
 		userEndpoints = user.NewEndpoints(userSvc)
+		entityHallEndpoints = entityhall.NewEndpoints(entityHallSvc)
+		actualTimeEndpoints = actualtime.NewEndpoints(actualTimeSvc)
+		thirdPartEndpoints = thirdpart.NewEndpoints(thirdpartSvc)
 	}
 
 	// Create channel used by both the signal handler and server goroutines
@@ -64,7 +81,11 @@ func RunServer(cfg *config.Config, metrics *metricsMlwr.Prometheus) {
 
 	addr := fmt.Sprintf("http://%s:%s", cfg.Server.Host, cfg.Server.HTTPPort)
 	u, _ := url.Parse(addr)
-	handleHTTPServer(ctx, u.Host, userEndpoints, &wg, errc, logger, metrics, cfg.Debug)
+	handleHTTPServer(ctx, u.Host, userEndpoints,
+		entityHallEndpoints,
+		actualTimeEndpoints,
+		thirdPartEndpoints,
+		&wg, errc, logger, metrics, cfg.Debug)
 
 	// Wait for signal.
 	logger.Infof("exiting (%v)", <-errc)

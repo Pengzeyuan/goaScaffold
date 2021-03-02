@@ -1,9 +1,9 @@
 package main
 
 import (
+	"boot/utils"
 	"log"
 
-	"git.chinaopen.ai/yottacloud/go-libs/redis"
 	"github.com/lneoe/go-help-libs/version"
 	"github.com/spf13/cobra"
 
@@ -40,10 +40,15 @@ func serverCmd() *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			config.Init(cfgFile)
 			dao.InitDB(config.C)
+			//dao.InitCanal(config.C)
 			dao.AutoMigrateDB()
-			if err := redis.Connect(); err != nil {
+			if err := utils.ConnectNats(); err != nil {
+				log.Fatalln(err)
 				return err
 			}
+			//if err := redis.Connect(); err != nil {
+			//	return err
+			//}
 
 			return nil
 		},
@@ -68,14 +73,20 @@ func versionCmd() *cobra.Command {
 	return versionCmd
 }
 
+var RootCmd cobra.Command = cobra.Command{
+	Use: "Scaffold",
+	Run: func(cmd *cobra.Command, args []string) {
+		_ = cmd.Help()
+	},
+}
+
 func main() {
-	var RootCmd = cobra.Command{
-		Use: "boot",
-	}
 
 	RootCmd.AddCommand(serverCmd())
 	RootCmd.AddCommand(versionCmd())
-
+	RootCmd.AddCommand(userCmd())
+	RootCmd.AddCommand(WebsocketCmd())
+	RootCmd.AddCommand(CanalCmd())
 	if err := RootCmd.Execute(); err != nil {
 		log.Fatalln(err)
 	}

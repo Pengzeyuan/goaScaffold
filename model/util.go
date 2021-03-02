@@ -57,3 +57,8 @@ func IsDuplicateError(err error) bool {
 
 	return false
 }
+
+type CanalInfo struct {
+	CallNoID    string      `json:"callNoID"`    // 叫号ID
+	InfoDetails interface{} `json:"infoDetails"` // 监听消息详情
+}

@@ -34,6 +34,7 @@ var _ = Service("User", func() {
 				MinLength(4)
 				MaxLength(8)
 			})
+
 			Attribute("captchaId", String, "图形验证码ID", func() {
 				Default("")
 				MinLength(1)

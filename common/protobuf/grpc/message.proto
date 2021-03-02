@@ -1,0 +1,73 @@
+// [START declaration]
+syntax = "proto3";
+package grpc;
+
+
+//    找到message Timestamp的定义是在\protobuf-3.0.0-beta-1\src\google\protobuf下的timestamp.proto文件里，直接将此文件复制到我使用它的那个DataAccessSerivceMassages.proto文件的同一目录，然后当然不行的，
+//    之后实在不能，就直接将timestamp.proto文件的Timestamp类型的定义直接复制进DataAccessSerivceMassages.proto文件里，
+//    结果居然可以；那么让这个定义再放在一个新的文件里然后import此文件呢，结果也是可以；然后对比一下新建的此文件和原本的timestamp.proto文件，
+//    发现，新的文件没有package google.protobuf;这一行定义，然后终于明白，原来是作用域的问题；
+//    解决的方法为：
+//    1.在用proto文件生成代码的bat语句中加入Timestamp.proto的路径，我的是在源码中
+//D:\WorkCode\protobuf-3.0.0-beta-1\src\google\protobuf的位置，因为在import是有加上google/protobuf的目录位置，
+//所以只导入D:\WorkCode\protobuf-3.0.0-beta-1\src目录就可以了；你可能会奇怪，为什么可以使用两个"-I"参数，是的，在https://developers.google.com/protocol-buffers/docs/proto中的
+
+
+
+
+// [END declaration]
+
+// [START messages]
+message Person {
+  string name = 1;
+  int32 id = 2;   // Unique ID number for this person.
+  string email = 3;
+
+  enum PhoneType {
+    MOBILE = 0;
+    HOME = 1;
+    WORK = 2;
+  }
+
+  message PhoneNumber {
+    string number = 1;
+    PhoneType type = 2;
+  }
+
+  repeated PhoneNumber phones = 4;
+
+//  google.protobuf.Timestamp last_updated = 5;
+}
+
+// Our address book file is just one of these.
+message AddressBook {
+  repeated Person people = 1;
+}
+
+// rpc调用的结果
+message Result {
+  bool success = 1;
+}
+
+// rpc请求的个数
+message ReqNum {
+  int32 num = 1;
+}
+
+message ReqName {
+  string name = 1;
+}
+
+// [END messages]
+
+// Interface exported by the server.
+service Manage {
+  // 添加一个人
+  rpc AddPerson(Person) returns (Result) {}
+  // 添加很多人
+  rpc AddPersons(stream Person) returns (Result) {}
+  // 获取指定数目的个人列表
+  rpc GetPersonsLimit(ReqNum) returns (stream Person) {}
+  // 获取名字为输入的个人列表
+  rpc GetPersons(stream ReqName) returns (stream Person) {}
+}

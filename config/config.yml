@@ -1,0 +1,27 @@
+# 调试模式：生产环境请关闭此项
+debug: true
+logger:
+  level: debug
+database:
+  dsn: root:root@(localhost:3306)/easymall?charset=utf8mb4&parseTime=True&loc=Local
+dp_database:
+  dsn: root:root@(localhost:3306)/gyzw_dp?charset=utf8mb4&parseTime=True&loc=Local
+gin_database:
+  dsn: root:root@(localhost:3306)/ginessential?charset=utf8mb4&parseTime=True&loc=Local
+server:
+  http_port: 8089
+jwt:
+  secret: 9e8702b0106a8709ce062382095ab163
+
+redis:
+  uri: redis://localhost:6379/2
+
+#大厅管理系统
+hallManagement_remote:
+  url: https://smartgate.shuzhigy.com/ebus/ycsstdt/gyzwfw/rest/gyzwfwuser/getAllUser
+  pass_id: ycsstdt
+  pass_token: 5BpmL7VMHh5BX8FYdp92uQa4tBTgHiR9
+  time_out: 10
+  # 超时时长
+  time_out_int: 5
+

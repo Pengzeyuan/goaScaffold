@@ -2,19 +2,19 @@ package model
 
 import (
 	"golang.org/x/crypto/bcrypt"
+	"time"
 )
 
-type User struct {
-	BaseUUIDModel
-
-	Username string  `gorm:"type:varchar(36);not null;unique;"`
-	Password string  `gorm:"type:varchar(128);"`
-	Mobile   *string `gorm:"type:varchar(15);unique;"`
-	Nickname string  `gorm:"type:varchar(30);not null;defult:''"`
+type AopUser struct {
+	BaseModel
+	UserName  string     // 用户名
+	Password  string     // 密码
+	LoginAt   *time.Time // 登录时间
+	ExpiresAt *time.Time // 过期时间
 }
 
 // CreatePassword 加密密码
-func (u *User) CreatePassword(raw string) (string, error) {
+func (u *AopUser) CreatePassword(raw string) (string, error) {
 
 	// Use GenerateFromPassword to hash & salt pwd
 	// MinCost is just an integer constant provided by the bcrypt
@@ -32,7 +32,7 @@ func (u *User) CreatePassword(raw string) (string, error) {
 }
 
 // CheckPassword 检查密码
-func (u *User) CheckPassword(plainPwd, hashedPwd string) bool {
+func (u *AopUser) CheckPassword(plainPwd, hashedPwd string) bool {
 
 	// Since we'll be getting the hashed password from the DB it
 	// will be a string so we'll need to convert it to a byte slice
