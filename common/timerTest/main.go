@@ -6,8 +6,52 @@ import (
 	"time"
 )
 
+func Test2IntFloat() {
+	var duration_Milliseconds time.Duration = 500 * time.Millisecond
+
+	var castToInt64 int64 = duration_Milliseconds.Nanoseconds() / 1e6
+	var castToFloat64 float64 = duration_Milliseconds.Seconds() * 1e3
+	fmt.Printf("Duration [%v]\ncastToInt64 [%d]\ncastToFloat64 [%.0f]\n", duration_Milliseconds, castToInt64, castToFloat64)
+}
+func TestdurationDseconds() {
+	var duration_Seconds time.Duration = (1250 * 10) * time.Millisecond
+	var duration_Minute time.Duration = 2 * time.Minute
+
+	var float64_Seconds float64 = duration_Seconds.Seconds()
+	var float64_Minutes float64 = duration_Minute.Minutes()
+
+	fmt.Printf("Seconds [%.3f]\nMinutes [%.2f]\n", float64_Seconds, float64_Minutes)
+}
+
+func TestTime() {
+	TestdurationDseconds()
+	testDUration()
+
+	var waitFiveHundredMillisections time.Duration = 500 * time.Millisecond
+
+	startingTime := time.Now().UTC()
+	time.Sleep(600 * time.Millisecond)
+	endingTime := time.Now().UTC()
+	//  就是真正持续的时间
+	var duration time.Duration = endingTime.Sub(startingTime)
+
+	if duration >= waitFiveHundredMillisections {
+		fmt.Printf("Wait %v\nNative [%v]\nMilliseconds [%d]\nSeconds [%.3f]\n", waitFiveHundredMillisections, duration, duration.Nanoseconds()/1e6, duration.Seconds())
+	}
+
+}
+
+func testDUration() {
+	var duration_Milliseconds time.Duration = 500 * time.Millisecond
+	var duration_Seconds time.Duration = (1250 * 10) * time.Millisecond
+	var duration_Minute time.Duration = 2 * time.Minute
+
+	fmt.Printf("Milli [%v]\nSeconds [%v]\nMinute [%v]\n", duration_Milliseconds, duration_Seconds, duration_Minute)
+}
+
 func main() {
-	TimeAfter()
+	TestTime()
+	//TimeAfter()
 	//t := time.NewTimer(time.Second * 2)
 	//defer t.Stop()
 	//for {

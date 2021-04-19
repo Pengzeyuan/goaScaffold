@@ -2,6 +2,7 @@ package main
 
 import (
 	"boot/utils"
+	"git.chinaopen.ai/yottacloud/go-libs/redis"
 	"log"
 
 	"github.com/lneoe/go-help-libs/version"
@@ -42,6 +43,10 @@ func serverCmd() *cobra.Command {
 			dao.InitDB(config.C)
 			//dao.InitCanal(config.C)
 			dao.AutoMigrateDB()
+			if err := redis.Connect(); err != nil {
+				return err
+			}
+
 			if err := utils.ConnectNats(); err != nil {
 				log.Fatalln(err)
 				return err

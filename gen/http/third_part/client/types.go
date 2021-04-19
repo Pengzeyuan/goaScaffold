@@ -13,6 +13,17 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
+// ReceiveThirdPartyPushDataRequestBody is the type of the "thirdPart" service
+// "ReceiveThirdPartyPushData" endpoint HTTP request body.
+type ReceiveThirdPartyPushDataRequestBody struct {
+	// 推送的具体方法
+	MethodName int `form:"methodName" json:"methodName" xml:"methodName"`
+	// 数据数量
+	Count int `form:"count" json:"count" xml:"count"`
+	// 第三方推送数据
+	Data interface{} `form:"data" json:"data" xml:"data"`
+}
+
 // GetActualTimeDataResponseBody is the type of the "thirdPart" service
 // "GetActualTimeData" endpoint HTTP response body.
 type GetActualTimeDataResponseBody struct {
@@ -21,6 +32,17 @@ type GetActualTimeDataResponseBody struct {
 	// 错误消息
 	Errmsg *string                           `form:"errmsg,omitempty" json:"errmsg,omitempty" xml:"errmsg,omitempty"`
 	Data   []*HallManagementRespResponseBody `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
+}
+
+// ReceiveThirdPartyPushDataResponseBody is the type of the "thirdPart" service
+// "ReceiveThirdPartyPushData" endpoint HTTP response body.
+type ReceiveThirdPartyPushDataResponseBody struct {
+	// 错误码
+	Errcode *int `form:"errcode,omitempty" json:"errcode,omitempty" xml:"errcode,omitempty"`
+	// 错误消息
+	Errmsg *string `form:"errmsg,omitempty" json:"errmsg,omitempty" xml:"errmsg,omitempty"`
+	// success
+	Result *string `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 }
 
 // GormRelatedSearchResponseBody is the type of the "thirdPart" service
@@ -56,6 +78,44 @@ type GetActualTimeDataBadRequestResponseBody struct {
 // "thirdPart" service "GetActualTimeData" endpoint HTTP response body for the
 // "internal_server_error" error.
 type GetActualTimeDataInternalServerErrorResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
+// ReceiveThirdPartyPushDataBadRequestResponseBody is the type of the
+// "thirdPart" service "ReceiveThirdPartyPushData" endpoint HTTP response body
+// for the "bad_request" error.
+type ReceiveThirdPartyPushDataBadRequestResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
+// ReceiveThirdPartyPushDataInternalServerErrorResponseBody is the type of the
+// "thirdPart" service "ReceiveThirdPartyPushData" endpoint HTTP response body
+// for the "internal_server_error" error.
+type ReceiveThirdPartyPushDataInternalServerErrorResponseBody struct {
 	// Name is the name of this class of errors.
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -142,6 +202,18 @@ type CompanyProfileRespResponseBody struct {
 	UserID *string `form:"userId,omitempty" json:"userId,omitempty" xml:"userId,omitempty"`
 }
 
+// NewReceiveThirdPartyPushDataRequestBody builds the HTTP request body from
+// the payload of the "ReceiveThirdPartyPushData" endpoint of the "thirdPart"
+// service.
+func NewReceiveThirdPartyPushDataRequestBody(p *thirdpart.ReceiveThirdPartyPushDataPayload) *ReceiveThirdPartyPushDataRequestBody {
+	body := &ReceiveThirdPartyPushDataRequestBody{
+		MethodName: p.MethodName,
+		Count:      p.Count,
+		Data:       p.Data,
+	}
+	return body
+}
+
 // NewGetActualTimeDataResultOK builds a "thirdPart" service
 // "GetActualTimeData" endpoint result from a HTTP "OK" response.
 func NewGetActualTimeDataResultOK(body *GetActualTimeDataResponseBody) *thirdpart.GetActualTimeDataResult {
@@ -175,6 +247,48 @@ func NewGetActualTimeDataBadRequest(body *GetActualTimeDataBadRequestResponseBod
 // NewGetActualTimeDataInternalServerError builds a thirdPart service
 // GetActualTimeData endpoint internal_server_error error.
 func NewGetActualTimeDataInternalServerError(body *GetActualTimeDataInternalServerErrorResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+
+	return v
+}
+
+// NewReceiveThirdPartyPushDataResultOK builds a "thirdPart" service
+// "ReceiveThirdPartyPushData" endpoint result from a HTTP "OK" response.
+func NewReceiveThirdPartyPushDataResultOK(body *ReceiveThirdPartyPushDataResponseBody) *thirdpart.ReceiveThirdPartyPushDataResult {
+	v := &thirdpart.ReceiveThirdPartyPushDataResult{
+		Errcode: *body.Errcode,
+		Errmsg:  *body.Errmsg,
+		Result:  *body.Result,
+	}
+
+	return v
+}
+
+// NewReceiveThirdPartyPushDataBadRequest builds a thirdPart service
+// ReceiveThirdPartyPushData endpoint bad_request error.
+func NewReceiveThirdPartyPushDataBadRequest(body *ReceiveThirdPartyPushDataBadRequestResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+
+	return v
+}
+
+// NewReceiveThirdPartyPushDataInternalServerError builds a thirdPart service
+// ReceiveThirdPartyPushData endpoint internal_server_error error.
+func NewReceiveThirdPartyPushDataInternalServerError(body *ReceiveThirdPartyPushDataInternalServerErrorResponseBody) *goa.ServiceError {
 	v := &goa.ServiceError{
 		Name:      *body.Name,
 		ID:        *body.ID,
@@ -264,6 +378,31 @@ func ValidateGetActualTimeDataResponseBody(body *GetActualTimeDataResponseBody) 
 	return
 }
 
+// ValidateReceiveThirdPartyPushDataResponseBody runs the validations defined
+// on ReceiveThirdPartyPushDataResponseBody
+func ValidateReceiveThirdPartyPushDataResponseBody(body *ReceiveThirdPartyPushDataResponseBody) (err error) {
+	if body.Errcode == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("errcode", "body"))
+	}
+	if body.Errmsg == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("errmsg", "body"))
+	}
+	if body.Result == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("result", "body"))
+	}
+	if body.Errcode != nil {
+		if *body.Errcode < 0 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("body.errcode", *body.Errcode, 0, true))
+		}
+	}
+	if body.Errcode != nil {
+		if *body.Errcode > 999999 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError("body.errcode", *body.Errcode, 999999, false))
+		}
+	}
+	return
+}
+
 // ValidateGormRelatedSearchResponseBody runs the validations defined on
 // GormRelatedSearchResponseBody
 func ValidateGormRelatedSearchResponseBody(body *GormRelatedSearchResponseBody) (err error) {
@@ -323,6 +462,55 @@ func ValidateGetActualTimeDataBadRequestResponseBody(body *GetActualTimeDataBadR
 // ValidateGetActualTimeDataInternalServerErrorResponseBody runs the
 // validations defined on GetActualTimeData_internal_server_error_Response_Body
 func ValidateGetActualTimeDataInternalServerErrorResponseBody(body *GetActualTimeDataInternalServerErrorResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateReceiveThirdPartyPushDataBadRequestResponseBody runs the validations
+// defined on ReceiveThirdPartyPushData_bad_request_Response_Body
+func ValidateReceiveThirdPartyPushDataBadRequestResponseBody(body *ReceiveThirdPartyPushDataBadRequestResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateReceiveThirdPartyPushDataInternalServerErrorResponseBody runs the
+// validations defined on
+// ReceiveThirdPartyPushData_internal_server_error_Response_Body
+func ValidateReceiveThirdPartyPushDataInternalServerErrorResponseBody(body *ReceiveThirdPartyPushDataInternalServerErrorResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
 	}

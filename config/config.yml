@@ -4,8 +4,14 @@ logger:
   level: debug
 database:
   dsn: root:root@(localhost:3306)/easymall?charset=utf8mb4&parseTime=True&loc=Local
+
 dp_database:
   dsn: root:root@(localhost:3306)/gyzw_dp?charset=utf8mb4&parseTime=True&loc=Local
+items_database:
+  dsn: root:root@(localhost:3306)/gyzw_items?charset=utf8mb4&parseTime=True&loc=Local
+dowork_database:
+  dsn: root:root@(localhost:3306)/gyzw_dowork?charset=utf8mb4&parseTime=True&loc=Local
+
 gin_database:
   dsn: root:root@(localhost:3306)/ginessential?charset=utf8mb4&parseTime=True&loc=Local
 server:
@@ -16,6 +22,7 @@ jwt:
 redis:
   uri: redis://localhost:6379/2
 
+
 #大厅管理系统
 hallManagement_remote:
   url: https://smartgate.shuzhigy.com/ebus/ycsstdt/gyzwfw/rest/gyzwfwuser/getAllUser
@@ -25,3 +32,5 @@ hallManagement_remote:
   # 超时时长
   time_out_int: 5
 
+upload_file:
+  size: 52428800

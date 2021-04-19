@@ -9,6 +9,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
 	"git.chinaopen.ai/yottacloud/go-libs/panichandler"
 	"github.com/golang/protobuf/proto"
 	ws "github.com/gorilla/websocket"
@@ -17,12 +24,6 @@ import (
 	"github.com/withlin/canal-go/client"
 	protocol "github.com/withlin/canal-go/protocol"
 	"go.uber.org/zap"
-	"log"
-	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
 )
 
 type Server struct {

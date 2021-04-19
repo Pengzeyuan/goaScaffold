@@ -7,9 +7,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
 	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
-	"time"
 )
 
 // 大厅排队办事实时图service
@@ -19,11 +19,17 @@ type HallActualTimeSVC interface {
 	ReceiveThirdPartyPushData(queryModel model.CommonQueryModel) (model.ServiceActualTimeResp, error)
 
 	// 存储WindowInfo第三方推送数据列表
-	SaveWindowInfoDataList(valueList []model.WindowInfo) error
+	SaveWindowInfoDataList(valueList []model.WindowInfo) (int64, error)
 	// 存储TakeNumber第三方推送数据列表
-	SaveTakeNumberDataList(valueList []model.TakeNumber) error
+	SaveTakeNumberDataList(valueList []model.DoProcess) (int64, error)
 	// 存储CallNumber第三方推送数据列表
-	SaveCallNumberDataList(valueList []model.CallNumber) error
+	SaveCallNumberDataList(valueList []model.DoProcess) (int64, error)
+
+	//存储TransactionCompleted第三方推送数据列表
+	SaveTransactionCompletedDataList(valueList []model.DoProcess) (int64, error)
+
+	//存储EvaluateTable第三方推送数据列表
+	SaveEvaluateDataList(valueList []model.DoProcess) (int64, error)
 }
 
 type HallActualTimeSVCImpl struct {
@@ -42,51 +48,67 @@ func NewHallActualTimeSVCImpl(ctx context.Context, db *gorm.DB, logger *zap.Logg
 }
 
 // 存储WindowInfo第三方推送数据列表
-func (h HallActualTimeSVCImpl) SaveWindowInfoDataList(valueList []model.WindowInfo) error {
+func (h HallActualTimeSVCImpl) SaveWindowInfoDataList(valueList []model.WindowInfo) (int64, error) {
 	actualTimeDao := h.hallActualTimeDao
-	for _, v := range valueList {
-		v.CreatedAt = time.Now()
-		v.UpdatedAt = time.Now()
 
-		err := actualTimeDao.SaveWindowInfoData(&v)
-		if err != nil {
-			h.logger.Error("SaveWindowInfoDataList is failed:", zap.Error(err))
-			return err
-		}
+	affectRow, err := actualTimeDao.SaveWindowInfoData(valueList)
+	if err != nil {
+		h.logger.Error("SaveWindowInfoDataList is failed:", zap.Error(err))
+		return affectRow, err
 	}
-	return nil
+
+	return affectRow, nil
 }
 
 // 存储TakeNumber第三方推送数据列表
-func (h HallActualTimeSVCImpl) SaveTakeNumberDataList(valueList []model.TakeNumber) error {
+func (h HallActualTimeSVCImpl) SaveTakeNumberDataList(valueList []model.DoProcess) (int64, error) {
 	actualTimeDao := h.hallActualTimeDao
-	for _, v := range valueList {
-		v.CreatedAt = time.Now()
-		v.UpdatedAt = time.Now()
 
-		err := actualTimeDao.SaveTakeNumberData(&v)
-		if err != nil {
-			h.logger.Error("SaveTakeNumberDataList is failed:", zap.Error(err))
-			return err
-		}
+	affectRow, err := actualTimeDao.SaveTakeNumberData(valueList)
+	if err != nil {
+		h.logger.Error("SaveTakeNumberDataList is failed:", zap.Error(err))
+		return affectRow, err
 	}
-	return nil
+
+	return affectRow, err
 }
 
 // 存储CallNumber第三方推送数据列表
-func (h HallActualTimeSVCImpl) SaveCallNumberDataList(valueList []model.CallNumber) error {
+func (h HallActualTimeSVCImpl) SaveCallNumberDataList(valueList []model.DoProcess) (int64, error) {
 	actualTimeDao := h.hallActualTimeDao
-	for _, v := range valueList {
-		v.CreatedAt = time.Now()
-		v.UpdatedAt = time.Now()
 
-		err := actualTimeDao.SaveCallNumberData(&v)
-		if err != nil {
-			h.logger.Error("SaveCallNumberDataList is failed:", zap.Error(err))
-			return err
-		}
+	affectRow, err := actualTimeDao.SaveCallNumberData(valueList)
+	if err != nil {
+		h.logger.Error("SaveCallNumberDataList is failed:", zap.Error(err))
+		return affectRow, err
 	}
-	return nil
+
+	return affectRow, err
+}
+
+// 存储TransactionCompleted第三方推送数据列表
+func (h HallActualTimeSVCImpl) SaveTransactionCompletedDataList(valueList []model.DoProcess) (int64, error) {
+	actualTimeDao := h.hallActualTimeDao
+
+	affectRow, err := actualTimeDao.SaveTransactionCompletedData(valueList)
+	if err != nil {
+		h.logger.Error("SaveTransactionCompletedDataList is failed:", zap.Error(err))
+		return affectRow, err
+	}
+
+	return affectRow, err
+}
+
+// 存储Evaluate第三方推送数据列表
+func (h HallActualTimeSVCImpl) SaveEvaluateDataList(valueList []model.DoProcess) (int64, error) {
+	actualTimeDao := h.hallActualTimeDao
+
+	affectRow, err := actualTimeDao.SaveEvaluateData(valueList)
+	if err != nil {
+		h.logger.Error("SaveEvaluateDataList is failed:", zap.Error(err))
+		return affectRow, err
+	}
+	return affectRow, err
 }
 
 // 接收第三方推送数据--大厅排队办事实时图基础数据
@@ -102,31 +124,34 @@ func (h HallActualTimeSVCImpl) ReceiveThirdPartyPushData(queryModel model.Common
 			h.logger.Error("ReceiveThirdPartyPushData unmarshall err:", zap.Error(err))
 			return res, err
 		}
-		err = h.SaveWindowInfoDataList(result)
+
+		affectRow, err := h.SaveWindowInfoDataList(result)
 		if err != nil {
 			h.logger.Error("SaveWindowInfoDataList failed", zap.Error(err))
 			return res, err
 		}
 
-		res.Msg = fmt.Sprintf("%d 条WindowInfo数据接收成功", len(result))
+		res.Msg = fmt.Sprintf("接收%d 条WindowInfo数据,成功插入%d 条", len(result), affectRow)
 	case constant.HallTakeNumber:
-		var result []model.TakeNumber
+
+		var result []model.DoProcess
 
 		err := json.Unmarshal(queryModel.PullData, &result)
 		if err != nil {
 			h.logger.Error("ReceiveThirdPartyPushData unmarshall err:", zap.Error(err))
 			return res, err
 		}
-		err = h.SaveTakeNumberDataList(result)
+		affectRows, err := h.SaveTakeNumberDataList(result)
 		if err != nil {
 
 			h.logger.Error("SaveTakeNumberDataList failed", zap.Error(err))
 			return res, err
 		}
 
-		res.Msg = fmt.Sprintf("%d 条TakeNumber数据接收成功", len(result))
+		res.Msg = fmt.Sprintf("接收%d 条TakeNumber数据,成功插入%d 条", len(result), affectRows)
 	case constant.HallCallNumber:
-		var result []model.CallNumber
+
+		var result []model.DoProcess
 
 		err := json.Unmarshal(queryModel.PullData, &result)
 		if err != nil {
@@ -134,14 +159,48 @@ func (h HallActualTimeSVCImpl) ReceiveThirdPartyPushData(queryModel model.Common
 			return res, err
 		}
 
-		err = h.SaveCallNumberDataList(result)
+		affectRows, err := h.SaveCallNumberDataList(result)
 		if err != nil {
 
 			h.logger.Error("SaveCallNumberDataList failed", zap.Error(err))
 			return res, err
 		}
 
-		res.Msg = fmt.Sprintf("%d 条CallNumber数据接收成功", len(result))
+		res.Msg = fmt.Sprintf("接收%d 条CallNumber数据,成功插入%d 条", len(result), affectRows)
+	case constant.HallTransactionCompleted:
+		var result []model.DoProcess
+
+		err := json.Unmarshal(queryModel.PullData, &result)
+		if err != nil {
+			h.logger.Error("ReceiveThirdPartyPushData unmarshall err:", zap.Error(err))
+			return res, err
+		}
+
+		affectRows, err := h.SaveTransactionCompletedDataList(result)
+		if err != nil {
+
+			h.logger.Error("SaveTransactionCompletedDataList failed", zap.Error(err))
+			return res, err
+		}
+
+		res.Msg = fmt.Sprintf("接收%d 条TransactionCompleted数据,成功插入%d 条", len(result), affectRows)
+	case constant.HallEvaluate:
+		var result []model.DoProcess
+
+		err := json.Unmarshal(queryModel.PullData, &result)
+		if err != nil {
+			h.logger.Error("ReceiveThirdPartyPushData unmarshall err:", zap.Error(err))
+			return res, err
+		}
+
+		affectRows, err := h.SaveEvaluateDataList(result)
+		if err != nil {
+
+			h.logger.Error("SaveEvaluateDataList failed", zap.Error(err))
+			return res, err
+		}
+
+		res.Msg = fmt.Sprintf("接收%d 条Evaluate数据,成功插入%d 条", len(result), affectRows)
 	default:
 		h.logger.Error("review no func name")
 		res.Msg = "review no func name"

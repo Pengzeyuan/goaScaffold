@@ -24,7 +24,7 @@ func BuildLoginByUsernamePayload(userLoginByUsernameBody string) (*user.LoginByU
 	{
 		err = json.Unmarshal([]byte(userLoginByUsernameBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"captchaId\": \"zs\",\n      \"humanCode\": \"rhb\",\n      \"password\": \"password\",\n      \"username\": \"user\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"captchaId\": \"y\",\n      \"humanCode\": \"5wj\",\n      \"password\": \"password\",\n      \"username\": \"user\"\n   }'")
 		}
 		if utf8.RuneCountInString(body.Username) < 1 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.username", body.Username, utf8.RuneCountInString(body.Username), 1, true))
@@ -145,7 +145,7 @@ func BuildSendSmsCodePayload(userSendSmsCodeBody string) (*user.SendSmsCodePaylo
 	{
 		err = json.Unmarshal([]byte(userSendSmsCodeBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"captchaId\": \"urr\",\n      \"humanCode\": \"tmh\",\n      \"mobile\": \"jve\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"captchaId\": \"c\",\n      \"humanCode\": \"tw4\",\n      \"mobile\": \"wmi\"\n   }'")
 		}
 		if utf8.RuneCountInString(body.Mobile) < 11 {
 			err = goa.MergeErrors(err, goa.InvalidLengthError("body.mobile", body.Mobile, utf8.RuneCountInString(body.Mobile), 11, true))

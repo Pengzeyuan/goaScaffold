@@ -18,9 +18,10 @@ import (
 
 // Server lists the thirdPart service endpoint HTTP handlers.
 type Server struct {
-	Mounts            []*MountPoint
-	GetActualTimeData http.Handler
-	GormRelatedSearch http.Handler
+	Mounts                    []*MountPoint
+	GetActualTimeData         http.Handler
+	ReceiveThirdPartyPushData http.Handler
+	GormRelatedSearch         http.Handler
 }
 
 // ErrorNamer is an interface implemented by generated error structs that
@@ -57,10 +58,12 @@ func New(
 	return &Server{
 		Mounts: []*MountPoint{
 			{"GetActualTimeData", "GET", "/api/third_part/get_hall_management_data"},
+			{"ReceiveThirdPartyPushData", "POST", "/api/third_part/receive_third_party_push_data"},
 			{"GormRelatedSearch", "GET", "/api/third_part/gorm_related_search"},
 		},
-		GetActualTimeData: NewGetActualTimeDataHandler(e.GetActualTimeData, mux, decoder, encoder, errhandler, formatter),
-		GormRelatedSearch: NewGormRelatedSearchHandler(e.GormRelatedSearch, mux, decoder, encoder, errhandler, formatter),
+		GetActualTimeData:         NewGetActualTimeDataHandler(e.GetActualTimeData, mux, decoder, encoder, errhandler, formatter),
+		ReceiveThirdPartyPushData: NewReceiveThirdPartyPushDataHandler(e.ReceiveThirdPartyPushData, mux, decoder, encoder, errhandler, formatter),
+		GormRelatedSearch:         NewGormRelatedSearchHandler(e.GormRelatedSearch, mux, decoder, encoder, errhandler, formatter),
 	}
 }
 
@@ -70,12 +73,14 @@ func (s *Server) Service() string { return "thirdPart" }
 // Use wraps the server handlers with the given middleware.
 func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.GetActualTimeData = m(s.GetActualTimeData)
+	s.ReceiveThirdPartyPushData = m(s.ReceiveThirdPartyPushData)
 	s.GormRelatedSearch = m(s.GormRelatedSearch)
 }
 
 // Mount configures the mux to serve the thirdPart endpoints.
 func Mount(mux goahttp.Muxer, h *Server) {
 	MountGetActualTimeDataHandler(mux, h.GetActualTimeData)
+	MountReceiveThirdPartyPushDataHandler(mux, h.ReceiveThirdPartyPushData)
 	MountGormRelatedSearchHandler(mux, h.GormRelatedSearch)
 }
 
@@ -111,6 +116,58 @@ func NewGetActualTimeDataHandler(
 		ctx = context.WithValue(ctx, goa.ServiceKey, "thirdPart")
 		var err error
 		res, err := endpoint(ctx, nil)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountReceiveThirdPartyPushDataHandler configures the mux to serve the
+// "thirdPart" service "ReceiveThirdPartyPushData" endpoint.
+func MountReceiveThirdPartyPushDataHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/api/third_part/receive_third_party_push_data", f)
+}
+
+// NewReceiveThirdPartyPushDataHandler creates a HTTP handler which loads the
+// HTTP request and calls the "thirdPart" service "ReceiveThirdPartyPushData"
+// endpoint.
+func NewReceiveThirdPartyPushDataHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeReceiveThirdPartyPushDataRequest(mux, decoder)
+		encodeResponse = EncodeReceiveThirdPartyPushDataResponse(encoder)
+		encodeError    = EncodeReceiveThirdPartyPushDataError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "ReceiveThirdPartyPushData")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "thirdPart")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)

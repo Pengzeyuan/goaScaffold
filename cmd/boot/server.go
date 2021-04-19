@@ -1,7 +1,6 @@
 package starter
 
 import (
-	thirdpart "boot/gen/third_part"
 	"context"
 	"fmt"
 	"net/http"
@@ -13,7 +12,7 @@ import (
 
 	"boot/config"
 	controller "boot/controller"
-	log "boot/gen/log"
+	"boot/gen/log"
 	"boot/gen/user"
 
 	metricsMlwr "git.chinaopen.ai/yottacloud/go-libs/goa-libs/middleware/metrics"
@@ -23,6 +22,12 @@ import (
 	entityhall "boot/gen/entity_hall"
 
 	actualtime "boot/gen/actual_time"
+
+	thirdpart "boot/gen/third_part"
+
+	importfile "boot/gen/import_file"
+
+	simulation "boot/gen/simulation"
 )
 
 func RunServer(cfg *config.Config, metrics *metricsMlwr.Prometheus) {
@@ -41,12 +46,16 @@ func RunServer(cfg *config.Config, metrics *metricsMlwr.Prometheus) {
 		entityHallSvc entityhall.Service
 		actualTimeSvc actualtime.Service
 		thirdpartSvc  thirdpart.Service
+		importFileSvc importfile.Service
+		simulationSvc simulation.Service
 	)
 	{
 		userSvc = controller.NewUser(logger)
 		entityHallSvc = controller.NewEntityHall(logger)
 		actualTimeSvc = controller.NewActualTime(logger)
 		thirdpartSvc = controller.NewThirdPart(logger)
+		importFileSvc = controller.NewImportFile(logger)
+		simulationSvc = controller.NewSimulation(logger)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
@@ -56,12 +65,16 @@ func RunServer(cfg *config.Config, metrics *metricsMlwr.Prometheus) {
 		entityHallEndpoints *entityhall.Endpoints
 		actualTimeEndpoints *actualtime.Endpoints
 		thirdPartEndpoints  *thirdpart.Endpoints
+		importFileEndpoints *importfile.Endpoints
+		simulationEndpoints *simulation.Endpoints
 	)
 	{
 		userEndpoints = user.NewEndpoints(userSvc)
 		entityHallEndpoints = entityhall.NewEndpoints(entityHallSvc)
 		actualTimeEndpoints = actualtime.NewEndpoints(actualTimeSvc)
 		thirdPartEndpoints = thirdpart.NewEndpoints(thirdpartSvc)
+		importFileEndpoints = importfile.NewEndpoints(importFileSvc)
+		simulationEndpoints = simulation.NewEndpoints(simulationSvc)
 	}
 
 	// Create channel used by both the signal handler and server goroutines
@@ -85,6 +98,8 @@ func RunServer(cfg *config.Config, metrics *metricsMlwr.Prometheus) {
 		entityHallEndpoints,
 		actualTimeEndpoints,
 		thirdPartEndpoints,
+		importFileEndpoints,
+		simulationEndpoints,
 		&wg, errc, logger, metrics, cfg.Debug)
 
 	// Wait for signal.

@@ -15,16 +15,18 @@ import (
 )
 
 type Config struct {
-	DpDatabase  DatabaseConfig `yaml:"dp_database,omitempty"`
-	GinDatabase DatabaseConfig `yaml:"gin_database,omitempty"`
-	Debug       bool           `yaml:"debug,omitempty" default:"false" `
-	Metrics     metricsConfig  `yaml:"metrics,omitempty"`
-	Pprof       pprofConfig    `yaml:"pprof,omitempty"`
-	Logger      LoggerConfig   `yaml:"logger,omitempty"`
-	Database    DatabaseConfig `yaml:"database,omitempty"`
-	Redis       redis.Conf     `yaml:"redis,omitempty"`
-	Server      ServerConfig   `yaml:"server,omitempty"`
-	Jwt         JwtConfig      `yaml:"jwt,omitempty"`
+	DpDatabase     DatabaseConfig `yaml:"dp_database,omitempty"`
+	ItemsDatabase  DatabaseConfig `yaml:"items_database,omitempty"`
+	DoWorkDatabase DatabaseConfig `yaml:"dowork_database,omitempty"`
+	GinDatabase    DatabaseConfig `yaml:"gin_database,omitempty"`
+	Debug          bool           `yaml:"debug,omitempty" default:"false" `
+	Metrics        metricsConfig  `yaml:"metrics,omitempty"`
+	Pprof          pprofConfig    `yaml:"pprof,omitempty"`
+	Logger         LoggerConfig   `yaml:"logger,omitempty"`
+	Database       DatabaseConfig `yaml:"database,omitempty"`
+	Redis          redis.Conf     `yaml:"redis,omitempty"`
+	Server         ServerConfig   `yaml:"server,omitempty"`
+	Jwt            JwtConfig      `yaml:"jwt,omitempty"`
 	// Tif        tif.Config       `yaml:"tif,omitempty"`
 	Cache                  CacheConfig                               `yaml:"cache,omitempty"`
 	Sms                    TencentSmsConfig                          `yaml:"sms,omitempty"`
@@ -33,6 +35,12 @@ type Config struct {
 	Nats                   NatsConf                                  `yaml:"nats,omitempty"`
 	Canal                  CanalConf                                 `yaml:"canal,omitempty"`
 	HallManagementDataConf hallmanagementconf.HallManagementDataConf `yaml:"hallManagement_remote,omitempty"`
+
+	UploadFile UploadFileConf `yaml:"upload_file,omitempty"`
+}
+
+type UploadFileConf struct {
+	Size int64
 }
 
 type CanalConf struct {

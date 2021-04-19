@@ -12,6 +12,11 @@ func GetActualTimeDataThirdPartPath() string {
 	return "/api/third_part/get_hall_management_data"
 }
 
+// ReceiveThirdPartyPushDataThirdPartPath returns the URL path to the thirdPart service ReceiveThirdPartyPushData HTTP endpoint.
+func ReceiveThirdPartyPushDataThirdPartPath() string {
+	return "/api/third_part/receive_third_party_push_data"
+}
+
 // GormRelatedSearchThirdPartPath returns the URL path to the thirdPart service GormRelatedSearch HTTP endpoint.
 func GormRelatedSearchThirdPartPath() string {
 	return "/api/third_part/gorm_related_search"

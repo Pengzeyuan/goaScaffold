@@ -6,3 +6,37 @@
 // $ goa gen boot/design
 
 package client
+
+import (
+	thirdpart "boot/gen/third_part"
+	"encoding/json"
+	"fmt"
+
+	goa "goa.design/goa/v3/pkg"
+)
+
+// BuildReceiveThirdPartyPushDataPayload builds the payload for the thirdPart
+// ReceiveThirdPartyPushData endpoint from CLI flags.
+func BuildReceiveThirdPartyPushDataPayload(thirdPartReceiveThirdPartyPushDataBody string) (*thirdpart.ReceiveThirdPartyPushDataPayload, error) {
+	var err error
+	var body ReceiveThirdPartyPushDataRequestBody
+	{
+		err = json.Unmarshal([]byte(thirdPartReceiveThirdPartyPushDataBody), &body)
+		if err != nil {
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"count\": 21,\n      \"data\": \"\",\n      \"methodName\": 1\n   }'")
+		}
+		if body.Data == nil {
+			err = goa.MergeErrors(err, goa.MissingFieldError("data", "body"))
+		}
+		if err != nil {
+			return nil, err
+		}
+	}
+	v := &thirdpart.ReceiveThirdPartyPushDataPayload{
+		MethodName: body.MethodName,
+		Count:      body.Count,
+		Data:       body.Data,
+	}
+
+	return v, nil
+}

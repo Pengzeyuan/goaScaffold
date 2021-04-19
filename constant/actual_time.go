@@ -6,4 +6,6 @@ const (
 	HallWindowInfo = iota + 1
 	HallTakeNumber
 	HallCallNumber
+	HallTransactionCompleted
+	HallEvaluate
 )

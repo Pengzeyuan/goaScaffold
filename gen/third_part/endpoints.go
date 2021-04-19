@@ -15,21 +15,24 @@ import (
 
 // Endpoints wraps the "thirdPart" service endpoints.
 type Endpoints struct {
-	GetActualTimeData goa.Endpoint
-	GormRelatedSearch goa.Endpoint
+	GetActualTimeData         goa.Endpoint
+	ReceiveThirdPartyPushData goa.Endpoint
+	GormRelatedSearch         goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "thirdPart" service with endpoints.
 func NewEndpoints(s Service) *Endpoints {
 	return &Endpoints{
-		GetActualTimeData: NewGetActualTimeDataEndpoint(s),
-		GormRelatedSearch: NewGormRelatedSearchEndpoint(s),
+		GetActualTimeData:         NewGetActualTimeDataEndpoint(s),
+		ReceiveThirdPartyPushData: NewReceiveThirdPartyPushDataEndpoint(s),
+		GormRelatedSearch:         NewGormRelatedSearchEndpoint(s),
 	}
 }
 
 // Use applies the given middleware to all the "thirdPart" service endpoints.
 func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.GetActualTimeData = m(e.GetActualTimeData)
+	e.ReceiveThirdPartyPushData = m(e.ReceiveThirdPartyPushData)
 	e.GormRelatedSearch = m(e.GormRelatedSearch)
 }
 
@@ -38,6 +41,15 @@ func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 func NewGetActualTimeDataEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		return s.GetActualTimeData(ctx)
+	}
+}
+
+// NewReceiveThirdPartyPushDataEndpoint returns an endpoint function that calls
+// the method "ReceiveThirdPartyPushData" of service "thirdPart".
+func NewReceiveThirdPartyPushDataEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*ReceiveThirdPartyPushDataPayload)
+		return s.ReceiveThirdPartyPushData(ctx, p)
 	}
 }
 

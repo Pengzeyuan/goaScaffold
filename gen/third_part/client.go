@@ -15,15 +15,17 @@ import (
 
 // Client is the "thirdPart" service client.
 type Client struct {
-	GetActualTimeDataEndpoint goa.Endpoint
-	GormRelatedSearchEndpoint goa.Endpoint
+	GetActualTimeDataEndpoint         goa.Endpoint
+	ReceiveThirdPartyPushDataEndpoint goa.Endpoint
+	GormRelatedSearchEndpoint         goa.Endpoint
 }
 
 // NewClient initializes a "thirdPart" service client given the endpoints.
-func NewClient(getActualTimeData, gormRelatedSearch goa.Endpoint) *Client {
+func NewClient(getActualTimeData, receiveThirdPartyPushData, gormRelatedSearch goa.Endpoint) *Client {
 	return &Client{
-		GetActualTimeDataEndpoint: getActualTimeData,
-		GormRelatedSearchEndpoint: gormRelatedSearch,
+		GetActualTimeDataEndpoint:         getActualTimeData,
+		ReceiveThirdPartyPushDataEndpoint: receiveThirdPartyPushData,
+		GormRelatedSearchEndpoint:         gormRelatedSearch,
 	}
 }
 
@@ -36,6 +38,17 @@ func (c *Client) GetActualTimeData(ctx context.Context) (res *GetActualTimeDataR
 		return
 	}
 	return ires.(*GetActualTimeDataResult), nil
+}
+
+// ReceiveThirdPartyPushData calls the "ReceiveThirdPartyPushData" endpoint of
+// the "thirdPart" service.
+func (c *Client) ReceiveThirdPartyPushData(ctx context.Context, p *ReceiveThirdPartyPushDataPayload) (res *ReceiveThirdPartyPushDataResult, err error) {
+	var ires interface{}
+	ires, err = c.ReceiveThirdPartyPushDataEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*ReceiveThirdPartyPushDataResult), nil
 }
 
 // GormRelatedSearch calls the "GormRelatedSearch" endpoint of the "thirdPart"

@@ -17,6 +17,8 @@ import (
 type Service interface {
 	// 接收大厅管理的数据
 	GetActualTimeData(context.Context) (res *GetActualTimeDataResult, err error)
+	// 接收第三方推送数据--大厅排队办事实时图基础数据--排号、叫号、办结、评价四阶段
+	ReceiveThirdPartyPushData(context.Context, *ReceiveThirdPartyPushDataPayload) (res *ReceiveThirdPartyPushDataResult, err error)
 	// gorm关联查询
 	GormRelatedSearch(context.Context) (res *GormRelatedSearchResult, err error)
 }
@@ -29,7 +31,7 @@ const ServiceName = "thirdPart"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [2]string{"GetActualTimeData", "GormRelatedSearch"}
+var MethodNames = [3]string{"GetActualTimeData", "ReceiveThirdPartyPushData", "GormRelatedSearch"}
 
 // GetActualTimeDataResult is the result type of the thirdPart service
 // GetActualTimeData method.
@@ -39,6 +41,28 @@ type GetActualTimeDataResult struct {
 	// 错误消息
 	Errmsg string
 	Data   []*HallManagementResp
+}
+
+// ReceiveThirdPartyPushDataPayload is the payload type of the thirdPart
+// service ReceiveThirdPartyPushData method.
+type ReceiveThirdPartyPushDataPayload struct {
+	// 推送的具体方法
+	MethodName int
+	// 数据数量
+	Count int
+	// 第三方推送数据
+	Data interface{}
+}
+
+// ReceiveThirdPartyPushDataResult is the result type of the thirdPart service
+// ReceiveThirdPartyPushData method.
+type ReceiveThirdPartyPushDataResult struct {
+	// 错误码
+	Errcode int
+	// 错误消息
+	Errmsg string
+	// success
+	Result string
 }
 
 // GormRelatedSearchResult is the result type of the thirdPart service

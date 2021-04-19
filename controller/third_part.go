@@ -5,13 +5,43 @@ import (
 	log "boot/gen/log"
 	thirdpart "boot/gen/third_part"
 	helperthird "boot/helper/thidPart"
+	"boot/model"
+	"boot/service"
 	"context"
+	"encoding/json"
+
+	"go.uber.org/zap"
 )
 
 //thirdPart service example implementation.
 //The example methods log the requests and return zero values.
 type thirdPartsrvc struct {
 	logger *log.Logger
+}
+
+func (s *thirdPartsrvc) ReceiveThirdPartyPushData(ctx context.Context, payload *thirdpart.ReceiveThirdPartyPushDataPayload) (res *thirdpart.ReceiveThirdPartyPushDataResult, err error) {
+	res = &thirdpart.ReceiveThirdPartyPushDataResult{}
+	logger := L(ctx, s.logger)
+	logger.Info("thirdPartsrvc.ReceiveThirdPartyPushData")
+
+	svc := service.NewHallActualTimeSVCImpl(ctx, dao.DpDB, logger)
+
+	marshal, err := json.Marshal(payload.Data)
+	queryModel := model.CommonQueryModel{
+		PullData: marshal,
+		Method:   payload.MethodName,
+		Count:    payload.Count,
+	}
+
+	actualTimeResp, err := svc.ReceiveThirdPartyPushData(queryModel)
+	if err != nil {
+		logger.Error("接收第三方推送数据失败", zap.Error(err))
+		return nil, MakeInternalServerError(ctx, "接收第三方推送数据失败")
+	}
+	res.Result = actualTimeResp.Msg
+
+	return res, nil
+
 }
 
 func (s *thirdPartsrvc) GormRelatedSearch(ctx context.Context) (res *thirdpart.GormRelatedSearchResult, err error) {
@@ -27,8 +57,9 @@ func NewThirdPart(logger *log.Logger) thirdpart.Service {
 func (s *thirdPartsrvc) GetActualTimeData(ctx context.Context) (res *thirdpart.GetActualTimeDataResult, err error) {
 	res = &thirdpart.GetActualTimeDataResult{}
 	resps := []*thirdpart.HallManagementResp{}
-	s.logger.Info("thirdPart.GetActualTimeData")
 	logger := L(ctx, s.logger)
+
+	logger.Info("thirdPart.GetActualTimeData")
 	//获取大厅管理数据
 	cli := helperthird.NewClient(logger, dao.DpDB)
 
@@ -42,10 +73,10 @@ func (s *thirdPartsrvc) GetActualTimeData(ctx context.Context) (res *thirdpart.G
 			OuName:  infos[i].CardNum,
 		}
 		resps = append(resps, hallManagementInform)
-
 	}
 
 	res.Data = resps
+
 	return res, err
 }
 

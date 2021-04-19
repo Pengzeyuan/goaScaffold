@@ -71,7 +71,7 @@ func NewUpdatePasswordEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.En
 		var err error
 		sc := security.JWTScheme{
 			Name:           "jwt",
-			Scopes:         []string{"role:user", "role:admin"},
+			Scopes:         []string{"role:user", "role:admin", "api:read", "api:write", "api:admin"},
 			RequiredScopes: []string{"role:user"},
 		}
 		ctx, err = authJWTFn(ctx, p.Token, &sc)

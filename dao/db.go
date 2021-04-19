@@ -2,11 +2,13 @@ package dao
 
 import (
 	"fmt"
-	"github.com/withlin/canal-go/client"
 	"time"
+
+	"github.com/withlin/canal-go/client"
 
 	"boot/config"
 	"boot/model"
+
 	// init mysql driver
 	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
@@ -14,13 +16,16 @@ import (
 
 var (
 	DpDB      *gorm.DB                     // 政务大屏二期需要使用的独立于一期的数据库
+	ItemsDB   *gorm.DB                     // 政务大屏一期事项中间库数据库
+	DoWorkDB  *gorm.DB                     // 政务大屏一期办事过程中间库数据库
 	Connector *client.SimpleCanalConnector // canal数据库增量订阅消费
 
 )
 
 func InitDB(cfg *config.Config) {
 	DpDB = GetMyDB(cfg.Debug, cfg.DpDatabase)
-
+	ItemsDB = GetMyDB(cfg.Debug, cfg.ItemsDatabase)
+	DoWorkDB = GetMyDB(cfg.Debug, cfg.DoWorkDatabase)
 }
 func InitCanal(cfg *config.Config) {
 	Connector = GetMyCanal(cfg.Canal)
@@ -160,11 +165,15 @@ func AutoMigrateDB() {
 	if err := query.AutoMigrate(
 		&model.AopUser{},
 		&model.WindowInfo{},
-		&model.TakeNumber{},
-		&model.CallNumber{},
+		&model.DoProcess{},
 		&model.HallManagementInfo{},
 		&model.LegalPersonUser{},
 		&model.CompanyProfile{},
+		&model.ImmediateInfo{},
+		&model.OnlineInfo{},
+		&model.NearbyInfo{},
+		&model.OnceInfo{},
+		&model.Simulation{},
 	).Error; err != nil {
 		zap.L().Panic("migrate db fail", zap.Error(err))
 	}

@@ -6,15 +6,15 @@ import (
 )
 
 var _ = API("boot", func() {
-	Title("微服务")
+	Title("goa微服务")
 	HTTP(func() {
 		Path("/api")
 	})
 
 	Server("boot", func() {
-		Description("微服务")
+		Description("goa微服务")
 		Services("User")
-
+		Services("entity_hall")
 		Host("localhost", func() {
 			Description("default host")
 			URI("http://localhost:8000/starter")
@@ -30,7 +30,10 @@ var APIKeyAuth = APIKeySecurity("api_key", func() {
 
 // JWTAuth defines a security scheme that uses JWT tokens.
 var JWTAuth = JWTSecurity("jwt", func() {
-	Description(`JWT 认证`)
+	Description("使用 JWT 认证, 需要认证的接口添加 ```Header```: ```Authorization: Bearer {jwtToken}```")
 	Scope("role:user", "用户")
 	Scope("role:admin", "管理员")
+	Scope("api:read", "只读权限")
+	Scope("api:write", "读写权限")
+	Scope("api:admin", "管理权限")
 })

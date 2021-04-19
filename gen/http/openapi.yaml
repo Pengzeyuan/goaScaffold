@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  title: 微服务
+  title: goa微服务
   version: ""
 host: localhost:8000
 basePath: /api
@@ -109,6 +109,254 @@ paths:
             $ref: '#/definitions/EntityHallWaitLineOverviewInternalServerErrorResponseBody'
       schemes:
       - http
+  /import_file/crowd_runs_little:
+    post:
+      tags:
+      - import_file
+      summary: 群众少跑腿
+      description: 群众少跑腿
+      operationId: import_file#CrowdRunsLittle
+      parameters:
+      - name: CrowdRunsLittleRequestBody
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ImportFileCrowdRunsLittleRequestBody'
+          required:
+          - regionCode
+      responses:
+        "200":
+          description: OK response.
+          schema:
+            $ref: '#/definitions/ImportFileCrowdRunsLittleResponseBody'
+            required:
+            - errcode
+            - errmsg
+            - data
+        "400":
+          description: Bad Request response.
+          schema:
+            $ref: '#/definitions/ImportFileCrowdRunsLittleBadRequestResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/ImportFileCrowdRunsLittleInternalServerErrorResponseBody'
+      schemes:
+      - http
+  /import_file/get_import_excel_file_info:
+    get:
+      tags:
+      - import_file
+      summary: 获取插入excel数据统计信息
+      description: 获取插入excel数据统计信息
+      operationId: import_file#GetImportExcelFileInfo
+      produces:
+      - application/json
+      parameters:
+      - name: endYear
+        in: query
+        description: 结束年份
+        required: true
+        type: integer
+      - name: area
+        in: query
+        description: 区域代码
+        required: false
+        type: string
+      responses:
+        "200":
+          description: OK response.
+          schema:
+            $ref: '#/definitions/ImportFileGetImportExcelFileInfoResponseBody'
+        "400":
+          description: Bad Request response.
+          schema:
+            $ref: '#/definitions/ImportFileGetImportExcelFileInfoBadRequestResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/ImportFileGetImportExcelFileInfoInternalServerErrorResponseBody'
+      schemes:
+      - http
+  /import_file/import_excel_file:
+    post:
+      tags:
+      - import_file
+      summary: 批量导入
+      description: excel数据批量导入，导入数据采用json格式存储
+      operationId: import_file#ImportExcelFile
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - name: X-Area
+        in: header
+        description: 区域
+        required: true
+        type: string
+        minLength: 1
+      - name: X-Year
+        in: header
+        description: 年份
+        required: true
+        type: integer
+      - name: X-Type
+        in: header
+        description: 类型
+        required: true
+        type: integer
+      - name: ImportExcelFileRequestBody
+        in: formData
+        required: true
+        schema:
+          $ref: '#/definitions/ImportFileImportExcelFileRequestBody'
+          required:
+          - file
+          - filename
+      responses:
+        "200":
+          description: OK response.
+          schema:
+            $ref: '#/definitions/ImportFileImportExcelFileResponseBody'
+        "400":
+          description: Bad Request response.
+          schema:
+            $ref: '#/definitions/ImportFileImportExcelFileBadRequestResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/ImportFileImportExcelFileInternalServerErrorResponseBody'
+      schemes:
+      - http
+  /import_file/reform_of_administrative:
+    post:
+      tags:
+      - import_file
+      summary: 行政审批制度改革事项详情
+      description: 行政审批制度改革事项详情
+      operationId: import_file#ReformOfAdministrative
+      parameters:
+      - name: ReformOfAdministrativeRequestBody
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ImportFileReformOfAdministrativeRequestBody'
+          required:
+          - regionCode
+      responses:
+        "200":
+          description: OK response.
+          schema:
+            $ref: '#/definitions/ImportFileReformOfAdministrativeResponseBody'
+            required:
+            - errcode
+            - errmsg
+            - data
+        "400":
+          description: Bad Request response.
+          schema:
+            $ref: '#/definitions/ImportFileReformOfAdministrativeBadRequestResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/ImportFileReformOfAdministrativeInternalServerErrorResponseBody'
+      schemes:
+      - http
+  /simulation/get_data:
+    post:
+      tags:
+      - simulation
+      summary: 获取模拟数据
+      description: |-
+        获取模拟数据
+
+        **Required security scopes for jwt**:
+          * `api:write`
+          * `api:read`
+      operationId: simulation#GetData
+      parameters:
+      - name: Authorization
+        in: header
+        description: JWT used for authentication
+        required: false
+        type: string
+      - name: GetDataRequestBody
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SimulationGetDataRequestBody'
+          required:
+          - key
+      responses:
+        "200":
+          description: OK response.
+          schema:
+            $ref: '#/definitions/SimulationGetDataResponseBody'
+            required:
+            - errcode
+            - errmsg
+            - data
+        "400":
+          description: Bad Request response.
+          schema:
+            $ref: '#/definitions/SimulationGetDataBadRequestResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/SimulationGetDataInternalServerErrorResponseBody'
+      schemes:
+      - http
+      security:
+      - jwt_header_Authorization: []
+  /simulation/set_data:
+    post:
+      tags:
+      - simulation
+      summary: 设置数据
+      description: |-
+        设置数据
+
+        **Required security scopes for jwt**:
+          * `api:write`
+          * `api:read`
+      operationId: simulation#SetData
+      parameters:
+      - name: Authorization
+        in: header
+        description: JWT used for authentication
+        required: false
+        type: string
+      - name: SetDataRequestBody
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SimulationSetDataRequestBody'
+          required:
+          - key
+          - val
+          - isShowMock
+      responses:
+        "200":
+          description: OK response.
+          schema:
+            $ref: '#/definitions/SimulationSetDataResponseBody'
+            required:
+            - errcode
+            - errmsg
+            - result
+        "400":
+          description: Bad Request response.
+          schema:
+            $ref: '#/definitions/SimulationSetDataBadRequestResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/SimulationSetDataInternalServerErrorResponseBody'
+      schemes:
+      - http
+      security:
+      - jwt_header_Authorization: []
   /third_part/get_hall_management_data:
     get:
       tags:
@@ -159,6 +407,42 @@ paths:
           description: Internal Server Error response.
           schema:
             $ref: '#/definitions/ThirdPartGormRelatedSearchInternalServerErrorResponseBody'
+      schemes:
+      - http
+  /third_part/receive_third_party_push_data:
+    post:
+      tags:
+      - thirdPart
+      summary: 接收第三方推送数据
+      description: 接收第三方推送数据--大厅排队办事实时图基础数据--排号、叫号、办结、评价四阶段
+      operationId: thirdPart#ReceiveThirdPartyPushData
+      parameters:
+      - name: ReceiveThirdPartyPushDataRequestBody
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ThirdPartReceiveThirdPartyPushDataRequestBody'
+          required:
+          - methodName
+          - count
+          - data
+      responses:
+        "200":
+          description: OK response.
+          schema:
+            $ref: '#/definitions/ThirdPartReceiveThirdPartyPushDataResponseBody'
+            required:
+            - errcode
+            - errmsg
+            - result
+        "400":
+          description: Bad Request response.
+          schema:
+            $ref: '#/definitions/ThirdPartReceiveThirdPartyPushDataBadRequestResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/ThirdPartReceiveThirdPartyPushDataInternalServerErrorResponseBody'
       schemes:
       - http
   /user/get_captcha_image:
@@ -342,7 +626,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -364,16 +648,16 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: GetActualTimeData_bad_request_Response_Body result type (default
       view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: true
+      timeout: false
     required:
     - name
     - id
@@ -406,19 +690,19 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: GetActualTimeData_internal_server_error_Response_Body result type
       (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
+      temporary: false
       timeout: true
     required:
     - name
@@ -478,7 +762,7 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
@@ -490,8 +774,8 @@ definitions:
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
-      timeout: false
+      temporary: false
+      timeout: true
     required:
     - name
     - id
@@ -528,15 +812,15 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: ReceiveThirdPartyPushData_internal_server_error_Response_Body result
       type (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
+      temporary: true
       timeout: true
     required:
     - name
@@ -622,14 +906,14 @@ definitions:
       captchaId:
         type: string
         description: 验证码ID
-        example: Labore doloribus impedit cupiditate.
+        example: Et facilis.
       image:
         type: string
         description: 图片base64
-        example: Ut fugit.
+        example: Doloribus repudiandae ab nihil quae.
     example:
-      captchaId: Illum numquam ex quasi dolores distinctio voluptate.
-      image: Magnam et aut a praesentium tenetur explicabo.
+      captchaId: Non et rerum minus aut quibusdam.
+      image: Ratione aut ea minima.
     required:
     - image
     - captchaId
@@ -678,6 +962,38 @@ definitions:
     required:
     - token
     - expires_in
+  CrowdRunsLittleRespResponseBody:
+    title: 'Mediatype identifier: crowdrunslittleresp; view=default'
+    type: object
+    properties:
+      mattersAccounted:
+        type: array
+        items:
+          $ref: '#/definitions/MatterNumberResponseBody'
+        description: 总事项不同年份数据
+        example:
+        - AfterAscension: 120
+          beforeAscension: 120
+        - AfterAscension: 120
+          beforeAscension: 120
+        - AfterAscension: 120
+          beforeAscension: 120
+      mattersAccountedProportion:
+        type: number
+        description: 最多跑一次事项占比提升比例
+        example: 0.8
+        format: float
+    description: 群众少跑腿返回值 (default view)
+    example:
+      mattersAccounted:
+      - AfterAscension: 120
+        beforeAscension: 120
+      - AfterAscension: 120
+        beforeAscension: 120
+      mattersAccountedProportion: 0.8
+    required:
+    - mattersAccounted
+    - mattersAccountedProportion
   EntityHallWaitLineOverviewBadRequestResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
@@ -685,7 +1001,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -703,11 +1019,11 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: WaitLineOverview_bad_request_Response_Body result type (default view)
     example:
       fault: true
@@ -730,7 +1046,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -748,11 +1064,11 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: WaitLineOverview_internal_server_error_Response_Body result type
       (default view)
     example:
@@ -761,7 +1077,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: true
-      timeout: true
+      timeout: false
     required:
     - name
     - id
@@ -817,6 +1133,64 @@ definitions:
     - errcode
     - errmsg
     - data
+  FourDoResponseBody:
+    title: 'Mediatype identifier: fourdo; view=default'
+    type: object
+    properties:
+      count:
+        type: integer
+        description: 数量
+        example: 6766937013239579121
+        format: int64
+      year:
+        type: integer
+        description: 年份
+        example: 5239662083443628087
+        format: int64
+    description: 四个办统计
+    example:
+      count: 1128935746715409452
+      year: 1402813993688287185
+    required:
+    - year
+    - count
+  GetDataRespResponseBody:
+    title: 'Mediatype identifier: getdataresp; view=default'
+    type: object
+    properties:
+      isShowMock:
+        type: boolean
+        description: 是否显示配置项
+        example: true
+      key:
+        type: string
+        description: 对应模块
+        example: 对应模块
+      orderBy:
+        type: integer
+        description: 1.通过评分正序 2.通过评分倒序
+        example: 1
+        format: int64
+      orderTimeScope:
+        type: integer
+        description: 1.按年统计 2.按月统计
+        example: 1
+        format: int64
+      val:
+        type: string
+        description: 对应值
+        example: 对应值
+    description: 获取模拟数据结果 (default view)
+    example:
+      isShowMock: true
+      key: 对应模块
+      orderBy: 1
+      orderTimeScope: 1
+      val: 对应值
+    required:
+    - key
+    - val
+    - isShowMock
   HallManagementRespResponseBody:
     title: 'Mediatype identifier: hallmanagementresp; view=default'
     type: object
@@ -842,6 +1216,605 @@ definitions:
     - cardNum
     - name
     - ouName
+  ImportFileCrowdRunsLittleBadRequestResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: CrowdRunsLittle_bad_request_Response_Body result type (default view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: false
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  ImportFileCrowdRunsLittleInternalServerErrorResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: CrowdRunsLittle_internal_server_error_Response_Body result type (default
+      view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  ImportFileCrowdRunsLittleRequestBody:
+    title: ImportFileCrowdRunsLittleRequestBody
+    type: object
+    properties:
+      endDate:
+        type: string
+        description: 结束时间
+        example: "2020-07-27"
+      regionCode:
+        type: string
+        description: 行政区划代码
+        example: "520100"
+      startDate:
+        type: string
+        description: 起始时间
+        example: "2019-07-27"
+    example:
+      endDate: "2020-07-27"
+      regionCode: "520100"
+      startDate: "2019-07-27"
+    required:
+    - regionCode
+  ImportFileCrowdRunsLittleResponseBody:
+    title: ImportFileCrowdRunsLittleResponseBody
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/CrowdRunsLittleRespResponseBody'
+      errcode:
+        type: integer
+        description: 错误码
+        example: 0
+        minimum: 0
+        maximum: 999999
+      errmsg:
+        type: string
+        description: 错误消息
+        example: ""
+    example:
+      data:
+        mattersAccounted:
+        - AfterAscension: 120
+          beforeAscension: 120
+        - AfterAscension: 120
+          beforeAscension: 120
+        mattersAccountedProportion: 0.8
+      errcode: 0
+      errmsg: ""
+    required:
+    - errcode
+    - errmsg
+    - data
+  ImportFileGetImportExcelFileInfoBadRequestResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: GetImportExcelFileInfo_bad_request_Response_Body result type (default
+      view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  ImportFileGetImportExcelFileInfoInternalServerErrorResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: false
+    description: GetImportExcelFileInfo_internal_server_error_Response_Body result
+      type (default view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: false
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  ImportFileGetImportExcelFileInfoResponseBody:
+    title: 'Mediatype identifier: fourdocountresp; view=default'
+    type: object
+    properties:
+      immediateInfoCount:
+        type: array
+        items:
+          $ref: '#/definitions/FourDoResponseBody'
+        example:
+        - count: 7193848232527309645
+          year: 2629434228737715737
+        - count: 7193848232527309645
+          year: 2629434228737715737
+        - count: 7193848232527309645
+          year: 2629434228737715737
+        - count: 7193848232527309645
+          year: 2629434228737715737
+      nearbyInfoCount:
+        type: array
+        items:
+          $ref: '#/definitions/FourDoResponseBody'
+        example:
+        - count: 7193848232527309645
+          year: 2629434228737715737
+        - count: 7193848232527309645
+          year: 2629434228737715737
+        - count: 7193848232527309645
+          year: 2629434228737715737
+        - count: 7193848232527309645
+          year: 2629434228737715737
+      onceInfoCount:
+        type: array
+        items:
+          $ref: '#/definitions/FourDoResponseBody'
+        example:
+        - count: 7193848232527309645
+          year: 2629434228737715737
+        - count: 7193848232527309645
+          year: 2629434228737715737
+        - count: 7193848232527309645
+          year: 2629434228737715737
+        - count: 7193848232527309645
+          year: 2629434228737715737
+      onlineInfoCount:
+        type: array
+        items:
+          $ref: '#/definitions/FourDoResponseBody'
+        example:
+        - count: 7193848232527309645
+          year: 2629434228737715737
+        - count: 7193848232527309645
+          year: 2629434228737715737
+        - count: 7193848232527309645
+          year: 2629434228737715737
+        - count: 7193848232527309645
+          year: 2629434228737715737
+    description: GetImportExcelFileInfoResponseBody result type (default view)
+    example:
+      immediateInfoCount:
+      - count: 7193848232527309645
+        year: 2629434228737715737
+      - count: 7193848232527309645
+        year: 2629434228737715737
+      - count: 7193848232527309645
+        year: 2629434228737715737
+      - count: 7193848232527309645
+        year: 2629434228737715737
+      nearbyInfoCount:
+      - count: 7193848232527309645
+        year: 2629434228737715737
+      - count: 7193848232527309645
+        year: 2629434228737715737
+      - count: 7193848232527309645
+        year: 2629434228737715737
+      - count: 7193848232527309645
+        year: 2629434228737715737
+      onceInfoCount:
+      - count: 7193848232527309645
+        year: 2629434228737715737
+      - count: 7193848232527309645
+        year: 2629434228737715737
+      - count: 7193848232527309645
+        year: 2629434228737715737
+      onlineInfoCount:
+      - count: 7193848232527309645
+        year: 2629434228737715737
+      - count: 7193848232527309645
+        year: 2629434228737715737
+    required:
+    - immediateInfoCount
+    - onlineInfoCount
+    - nearbyInfoCount
+    - onceInfoCount
+  ImportFileImportExcelFileBadRequestResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: false
+    description: ImportExcelFile_bad_request_Response_Body result type (default view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: false
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  ImportFileImportExcelFileInternalServerErrorResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: false
+    description: ImportExcelFile_internal_server_error_Response_Body result type (default
+      view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: false
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  ImportFileImportExcelFileRequestBody:
+    title: ImportFileImportExcelFileRequestBody
+    type: object
+    properties:
+      file:
+        type: string
+        description: 上传文件内容
+        example:
+        - 53
+        - 117
+        - 100
+        maxLength: 52428800
+      filename:
+        type: string
+        description: 文件名
+        example: ckt
+        maxLength: 128
+    example:
+      file:
+      - 119
+      - 99
+      - 120
+      filename: qc0
+    required:
+    - file
+    - filename
+  ImportFileImportExcelFileResponseBody:
+    title: 'Mediatype identifier: successresult; view=default'
+    type: object
+    properties:
+      ok:
+        type: boolean
+        description: success
+        example: true
+    description: ImportExcelFileResponseBody result type (default view)
+    example:
+      ok: true
+    required:
+    - ok
+  ImportFileReformOfAdministrativeBadRequestResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: ReformOfAdministrative_bad_request_Response_Body result type (default
+      view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  ImportFileReformOfAdministrativeInternalServerErrorResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: ReformOfAdministrative_internal_server_error_Response_Body result
+      type (default view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  ImportFileReformOfAdministrativeRequestBody:
+    title: ImportFileReformOfAdministrativeRequestBody
+    type: object
+    properties:
+      endDate:
+        type: string
+        description: 结束时间
+        example: "2020-07-27"
+      regionCode:
+        type: string
+        description: 行政区划代码
+        example: "520100"
+      startDate:
+        type: string
+        description: 起始时间
+        example: "2019-07-27"
+    example:
+      endDate: "2020-07-27"
+      regionCode: "520100"
+      startDate: "2019-07-27"
+    required:
+    - regionCode
+  ImportFileReformOfAdministrativeResponseBody:
+    title: ImportFileReformOfAdministrativeResponseBody
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/ReformOfAdministrativeRespResponseBody'
+      errcode:
+        type: integer
+        description: 错误码
+        example: 0
+        minimum: 0
+        maximum: 999999
+      errmsg:
+        type: string
+        description: 错误消息
+        example: ""
+    example:
+      data:
+        pastSplitCount: 65
+        splitCount: 48
+        splitRate: 32.5
+      errcode: 0
+      errmsg: ""
+    required:
+    - errcode
+    - errmsg
+    - data
   LegalPersonUserRespResponseBody:
     title: 'Mediatype identifier: legalpersonuserresp; view=default'
     type: object
@@ -879,12 +1852,67 @@ definitions:
       - industry: 1036
         name: 青朵教育
         userId: 王大锤
+      - industry: 1036
+        name: 青朵教育
+        userId: 王大锤
+      - industry: 1036
+        name: 青朵教育
+        userId: 王大锤
       id: 1035
       name: 小白
     required:
     - id
     - name
     - companies
+  MatterNumberResponseBody:
+    title: 'Mediatype identifier: matternumber; view=default'
+    type: object
+    properties:
+      AfterAscension:
+        type: integer
+        description: 提升后
+        example: 120
+        format: int32
+      beforeAscension:
+        type: integer
+        description: 提升前
+        example: 120
+        format: int32
+    description: 事项数
+    example:
+      AfterAscension: 120
+      beforeAscension: 120
+    required:
+    - beforeAscension
+    - AfterAscension
+  ReformOfAdministrativeRespResponseBody:
+    title: 'Mediatype identifier: reformofadministrativeresp; view=default'
+    type: object
+    properties:
+      pastSplitCount:
+        type: integer
+        description: 去年事项大项拆分
+        example: 65
+        format: int32
+      splitCount:
+        type: integer
+        description: 今年事项大项拆分
+        example: 48
+        format: int32
+      splitRate:
+        type: number
+        description: 事项拆分比率
+        example: 32.5
+        format: float
+    description: 行政审批制度改革事项详情 (default view)
+    example:
+      pastSplitCount: 65
+      splitCount: 48
+      splitRate: 32.5
+    required:
+    - splitCount
+    - pastSplitCount
+    - splitRate
   SessionResponseBody:
     title: 'Mediatype identifier: session; view=default'
     type: object
@@ -899,15 +1927,301 @@ definitions:
         expires_in: 25200
         token: eyJhbGciOiJIUz...
       user:
-        id: Voluptas atque inventore quas.
+        id: Id fuga eum.
         isActive: true
-        loginTime: Est facilis dolorem.
-        mobile: Quo possimus aut labore.
-        nickname: Itaque beatae omnis ab quibusdam non recusandae.
-        username: Vitae at quae harum ipsam.
+        loginTime: Est rerum quibusdam.
+        mobile: Eum ipsa et.
+        nickname: Inventore eos.
+        username: Est repellat.
     required:
     - user
     - credentials
+  SimulationGetDataBadRequestResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: false
+    description: GetData_bad_request_Response_Body result type (default view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  SimulationGetDataInternalServerErrorResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: GetData_internal_server_error_Response_Body result type (default
+      view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: false
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  SimulationGetDataRequestBody:
+    title: SimulationGetDataRequestBody
+    type: object
+    properties:
+      key:
+        type: string
+        description: 对应模块
+        example: 对应模块
+    example:
+      key: 对应模块
+    required:
+    - key
+  SimulationGetDataResponseBody:
+    title: SimulationGetDataResponseBody
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/GetDataRespResponseBody'
+      errcode:
+        type: integer
+        description: 错误码
+        example: 0
+        minimum: 0
+        maximum: 999999
+      errmsg:
+        type: string
+        description: 错误消息
+        example: ""
+    example:
+      data:
+        isShowMock: true
+        key: 对应模块
+        orderBy: 1
+        orderTimeScope: 1
+        val: 对应值
+      errcode: 0
+      errmsg: ""
+    required:
+    - errcode
+    - errmsg
+    - data
+  SimulationSetDataBadRequestResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: SetData_bad_request_Response_Body result type (default view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  SimulationSetDataInternalServerErrorResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: SetData_internal_server_error_Response_Body result type (default
+      view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  SimulationSetDataRequestBody:
+    title: SimulationSetDataRequestBody
+    type: object
+    properties:
+      isShowMock:
+        type: boolean
+        description: 是否显示配置项
+        example: true
+      key:
+        type: string
+        description: 对应模块
+        example: 对应模块
+      orderBy:
+        type: integer
+        description: 1、按评价分正序;2、按评价分倒序
+        default: 1
+        example: 1
+        format: int64
+      orderTimeScope:
+        type: integer
+        description: 1、按当年度评价;2、按上个月评价
+        default: 1
+        example: 1
+        format: int64
+      val:
+        type: string
+        description: 对应值
+        example: 对应值
+    example:
+      isShowMock: true
+      key: 对应模块
+      orderBy: 1
+      orderTimeScope: 1
+      val: 对应值
+    required:
+    - key
+    - val
+    - isShowMock
+  SimulationSetDataResponseBody:
+    title: SimulationSetDataResponseBody
+    type: object
+    properties:
+      errcode:
+        type: integer
+        description: 错误码
+        example: 0
+        minimum: 0
+        maximum: 999999
+      errmsg:
+        type: string
+        description: 错误消息
+        example: ""
+      result:
+        $ref: '#/definitions/SuccessResultResponseBody'
+    example:
+      errcode: 0
+      errmsg: ""
+      result:
+        ok: true
+    required:
+    - errcode
+    - errmsg
+    - result
   SuccessResultResponseBody:
     title: 'Mediatype identifier: successresult; view=default'
     type: object
@@ -946,7 +2260,7 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
@@ -958,7 +2272,7 @@ definitions:
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
+      temporary: false
       timeout: true
     required:
     - name
@@ -974,7 +2288,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -1000,11 +2314,11 @@ definitions:
     description: GetActualTimeData_internal_server_error_Response_Body result type
       (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
+      temporary: false
       timeout: true
     required:
     - name
@@ -1031,9 +2345,6 @@ definitions:
         - cardNum: "1035"
           name: 小白
           ouName: 社保
-        - cardNum: "1035"
-          name: 小白
-          ouName: 社保
       errcode:
         type: integer
         description: 错误码
@@ -1046,6 +2357,9 @@ definitions:
         example: ""
     example:
       data:
+      - cardNum: "1035"
+        name: 小白
+        ouName: 社保
       - cardNum: "1035"
         name: 小白
         ouName: 社保
@@ -1094,7 +2408,7 @@ definitions:
     description: GormRelatedSearch_bad_request_Response_Body result type (default
       view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
@@ -1114,7 +2428,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -1132,7 +2446,7 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
@@ -1140,7 +2454,7 @@ definitions:
     description: GormRelatedSearch_internal_server_error_Response_Body result type
       (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
@@ -1246,25 +2560,13 @@ definitions:
           userId: 王大锤
         id: 1035
         name: 小白
-      - companies:
-        - industry: 1036
-          name: 青朵教育
-          userId: 王大锤
-        - industry: 1036
-          name: 青朵教育
-          userId: 王大锤
-        - industry: 1036
-          name: 青朵教育
-          userId: 王大锤
-        id: 1035
-        name: 小白
       errcode: 0
       errmsg: ""
     required:
     - errcode
     - errmsg
     - data
-  UserGetCaptchaImageBadRequestResponseBody:
+  ThirdPartReceiveThirdPartyPushDataBadRequestResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -1289,11 +2591,154 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: ReceiveThirdPartyPushData_bad_request_Response_Body result type (default
+      view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: false
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  ThirdPartReceiveThirdPartyPushDataInternalServerErrorResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: true
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: false
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: ReceiveThirdPartyPushData_internal_server_error_Response_Body result
+      type (default view)
+    example:
+      fault: false
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: false
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  ThirdPartReceiveThirdPartyPushDataRequestBody:
+    title: ThirdPartReceiveThirdPartyPushDataRequestBody
+    type: object
+    properties:
+      count:
+        type: integer
+        description: 数据数量
+        example: 21
+        format: int64
+      data:
+        description: 第三方推送数据
+        example: ""
+      methodName:
+        type: integer
+        description: 推送的具体方法
+        example: 1
+        format: int64
+    example:
+      count: 21
+      data: ""
+      methodName: 1
+    required:
+    - methodName
+    - count
+    - data
+  ThirdPartReceiveThirdPartyPushDataResponseBody:
+    title: ThirdPartReceiveThirdPartyPushDataResponseBody
+    type: object
+    properties:
+      errcode:
+        type: integer
+        description: 错误码
+        example: 0
+        minimum: 0
+        maximum: 999999
+      errmsg:
+        type: string
+        description: 错误消息
+        example: ""
+      result:
+        type: string
+        description: success
+        example: getDataSuccess
+    example:
+      errcode: 0
+      errmsg: ""
+      result: getDataSuccess
+    required:
+    - errcode
+    - errmsg
+    - result
+  UserGetCaptchaImageBadRequestResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
         example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: GetCaptchaImage_bad_request_Response_Body result type (default view)
     example:
       fault: true
@@ -1301,7 +2746,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: true
-      timeout: false
+      timeout: true
     required:
     - name
     - id
@@ -1346,8 +2791,8 @@ definitions:
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
-      timeout: true
+      temporary: false
+      timeout: false
     required:
     - name
     - id
@@ -1373,8 +2818,8 @@ definitions:
         example: ""
     example:
       data:
-        captchaId: Debitis velit inventore.
-        image: Facilis architecto voluptatem magni magni odit sit.
+        captchaId: Excepturi et quo.
+        image: Ipsam earum aliquam quo voluptate dolor ab.
       errcode: 0
       errmsg: ""
     required:
@@ -1405,19 +2850,19 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
         example: true
     description: LoginBySmsCode_bad_request_Response_Body result type (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: false
+      timeout: true
     required:
     - name
     - id
@@ -1454,7 +2899,7 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: LoginBySmsCode_internal_server_error_Response_Body result type (default
       view)
     example:
@@ -1462,8 +2907,8 @@ definitions:
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
-      timeout: false
+      temporary: true
+      timeout: true
     required:
     - name
     - id
@@ -1511,17 +2956,17 @@ definitions:
         example: ""
     example:
       data:
-        cookie: Eos optio ea voluptas voluptatem magnam nostrum.
+        cookie: Nesciunt dolorem.
         credentials:
           expires_in: 25200
           token: eyJhbGciOiJIUz...
         user:
-          id: Ipsam magni quia minus officiis.
+          id: Molestiae at nihil sed.
           isActive: true
-          loginTime: Atque sed occaecati optio.
-          mobile: Nihil sed eaque consequuntur.
-          nickname: Quasi molestiae.
-          username: Eum et repellat itaque itaque delectus.
+          loginTime: Perspiciatis quasi et optio molestias optio aut.
+          mobile: Eos optio ea voluptas voluptatem magnam nostrum.
+          nickname: Atque sed occaecati optio.
+          username: Consequuntur nostrum.
       errcode: 0
       errmsg: ""
     required:
@@ -1556,15 +3001,15 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: LoginByUsername_bad_request_Response_Body result type (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: true
-      timeout: false
+      timeout: true
     required:
     - name
     - id
@@ -1579,7 +3024,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -1597,11 +3042,11 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: LoginByUsername_internal_server_error_Response_Body result type (default
       view)
     example:
@@ -1610,7 +3055,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: false
+      timeout: true
     required:
     - name
     - id
@@ -1626,14 +3071,14 @@ definitions:
         type: string
         description: 图形验证码ID
         default: ""
-        example: udf
+        example: "09"
         minLength: 1
         maxLength: 128
       humanCode:
         type: string
         description: 图形验证码
         default: ""
-        example: efz
+        example: pw8
         minLength: 4
         maxLength: 8
       password:
@@ -1649,8 +3094,8 @@ definitions:
         minLength: 1
         maxLength: 128
     example:
-      captchaId: cx4
-      humanCode: kt1
+      captchaId: "41"
+      humanCode: p9y
       password: password
       username: user
     required:
@@ -1674,17 +3119,17 @@ definitions:
         example: ""
     example:
       data:
-        cookie: Eos optio ea voluptas voluptatem magnam nostrum.
+        cookie: Nesciunt dolorem.
         credentials:
           expires_in: 25200
           token: eyJhbGciOiJIUz...
         user:
-          id: Ipsam magni quia minus officiis.
+          id: Molestiae at nihil sed.
           isActive: true
-          loginTime: Atque sed occaecati optio.
-          mobile: Nihil sed eaque consequuntur.
-          nickname: Quasi molestiae.
-          username: Eum et repellat itaque itaque delectus.
+          loginTime: Perspiciatis quasi et optio molestias optio aut.
+          mobile: Eos optio ea voluptas voluptatem magnam nostrum.
+          nickname: Atque sed occaecati optio.
+          username: Consequuntur nostrum.
       errcode: 0
       errmsg: ""
     required:
@@ -1697,36 +3142,36 @@ definitions:
       id:
         type: string
         description: ID
-        example: Consectetur doloremque tempora iure est laboriosam.
+        example: Et quis praesentium quia eos deserunt illum.
       isActive:
         type: boolean
         description: 是否可用
-        example: true
+        example: false
       loginTime:
         type: string
         description: 登陆时间
         default: "00:00:00"
-        example: Ut corporis placeat.
+        example: Vitae suscipit dolor voluptatem.
       mobile:
         type: string
         description: 手机号
-        example: Delectus recusandae doloribus.
+        example: Quis omnis enim.
       nickname:
         type: string
         description: 昵称
-        example: Autem dolor fugiat maxime nulla et.
+        example: Qui quis eveniet.
       username:
         type: string
         description: 用户名
-        example: Repudiandae pariatur quis error.
+        example: Natus velit et.
     description: 用户
     example:
-      id: Laboriosam cupiditate.
-      isActive: false
-      loginTime: Quae cupiditate aut.
-      mobile: Voluptas corrupti et.
-      nickname: Sint ipsum aut.
-      username: Aut sunt culpa voluptas minima illo asperiores.
+      id: Rem ipsam.
+      isActive: true
+      loginTime: Voluptatem saepe.
+      mobile: Quae voluptatem facere vel ratione velit.
+      nickname: Nulla perspiciatis sed.
+      username: Itaque placeat molestiae distinctio aliquid accusantium.
     required:
     - id
     - username
@@ -1758,11 +3203,11 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: SendSmsCode_bad_request_Response_Body result type (default view)
     example:
       fault: false
@@ -1770,7 +3215,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: false
+      timeout: true
     required:
     - name
     - id
@@ -1811,7 +3256,7 @@ definitions:
     description: SendSmsCode_internal_server_error_Response_Body result type (default
       view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
@@ -1831,25 +3276,25 @@ definitions:
       captchaId:
         type: string
         description: 图形验证码ID
-        example: i
+        example: q
         minLength: 1
         maxLength: 128
       humanCode:
         type: string
         description: 图形验证码
-        example: 4ee
+        example: bqn
         minLength: 4
         maxLength: 8
       mobile:
         type: string
         description: 手机号
-        example: 0a3
+        example: f6h
         minLength: 11
         maxLength: 11
     example:
-      captchaId: wu
-      humanCode: p0c
-      mobile: skl
+      captchaId: m
+      humanCode: 3ey
+      mobile: nh9
     required:
     - mobile
     - humanCode
@@ -1885,7 +3330,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -1915,7 +3360,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: false
+      timeout: true
     required:
     - name
     - id
@@ -1930,7 +3375,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -1952,7 +3397,7 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: UpdatePassword_internal_server_error_Response_Body result type (default
       view)
     example:
@@ -1961,7 +3406,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: true
+      timeout: false
     required:
     - name
     - id
@@ -2038,10 +3483,13 @@ securityDefinitions:
   jwt_header_Authorization:
     type: apiKey
     description: |-
-      JWT 认证
+      使用 JWT 认证, 需要认证的接口添加 ```Header```: ```Authorization: Bearer {jwtToken}```
 
       **Security Scopes**:
         * `role:user`: 用户
         * `role:admin`: 管理员
+        * `api:read`: 只读权限
+        * `api:write`: 读写权限
+        * `api:admin`: 管理权限
     name: Authorization
     in: header

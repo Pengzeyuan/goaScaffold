@@ -13,6 +13,17 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
+// ReceiveThirdPartyPushDataRequestBody is the type of the "thirdPart" service
+// "ReceiveThirdPartyPushData" endpoint HTTP request body.
+type ReceiveThirdPartyPushDataRequestBody struct {
+	// 推送的具体方法
+	MethodName *int `form:"methodName,omitempty" json:"methodName,omitempty" xml:"methodName,omitempty"`
+	// 数据数量
+	Count *int `form:"count,omitempty" json:"count,omitempty" xml:"count,omitempty"`
+	// 第三方推送数据
+	Data interface{} `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
+}
+
 // GetActualTimeDataResponseBody is the type of the "thirdPart" service
 // "GetActualTimeData" endpoint HTTP response body.
 type GetActualTimeDataResponseBody struct {
@@ -21,6 +32,17 @@ type GetActualTimeDataResponseBody struct {
 	// 错误消息
 	Errmsg string                            `form:"errmsg" json:"errmsg" xml:"errmsg"`
 	Data   []*HallManagementRespResponseBody `form:"data" json:"data" xml:"data"`
+}
+
+// ReceiveThirdPartyPushDataResponseBody is the type of the "thirdPart" service
+// "ReceiveThirdPartyPushData" endpoint HTTP response body.
+type ReceiveThirdPartyPushDataResponseBody struct {
+	// 错误码
+	Errcode int `form:"errcode" json:"errcode" xml:"errcode"`
+	// 错误消息
+	Errmsg string `form:"errmsg" json:"errmsg" xml:"errmsg"`
+	// success
+	Result string `form:"result" json:"result" xml:"result"`
 }
 
 // GormRelatedSearchResponseBody is the type of the "thirdPart" service
@@ -56,6 +78,44 @@ type GetActualTimeDataBadRequestResponseBody struct {
 // "thirdPart" service "GetActualTimeData" endpoint HTTP response body for the
 // "internal_server_error" error.
 type GetActualTimeDataInternalServerErrorResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// ReceiveThirdPartyPushDataBadRequestResponseBody is the type of the
+// "thirdPart" service "ReceiveThirdPartyPushData" endpoint HTTP response body
+// for the "bad_request" error.
+type ReceiveThirdPartyPushDataBadRequestResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// ReceiveThirdPartyPushDataInternalServerErrorResponseBody is the type of the
+// "thirdPart" service "ReceiveThirdPartyPushData" endpoint HTTP response body
+// for the "internal_server_error" error.
+type ReceiveThirdPartyPushDataInternalServerErrorResponseBody struct {
 	// Name is the name of this class of errors.
 	Name string `form:"name" json:"name" xml:"name"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -158,6 +218,18 @@ func NewGetActualTimeDataResponseBody(res *thirdpart.GetActualTimeDataResult) *G
 	return body
 }
 
+// NewReceiveThirdPartyPushDataResponseBody builds the HTTP response body from
+// the result of the "ReceiveThirdPartyPushData" endpoint of the "thirdPart"
+// service.
+func NewReceiveThirdPartyPushDataResponseBody(res *thirdpart.ReceiveThirdPartyPushDataResult) *ReceiveThirdPartyPushDataResponseBody {
+	body := &ReceiveThirdPartyPushDataResponseBody{
+		Errcode: res.Errcode,
+		Errmsg:  res.Errmsg,
+		Result:  res.Result,
+	}
+	return body
+}
+
 // NewGormRelatedSearchResponseBody builds the HTTP response body from the
 // result of the "GormRelatedSearch" endpoint of the "thirdPart" service.
 func NewGormRelatedSearchResponseBody(res *thirdpart.GormRelatedSearchResult) *GormRelatedSearchResponseBody {
@@ -204,6 +276,36 @@ func NewGetActualTimeDataInternalServerErrorResponseBody(res *goa.ServiceError) 
 	return body
 }
 
+// NewReceiveThirdPartyPushDataBadRequestResponseBody builds the HTTP response
+// body from the result of the "ReceiveThirdPartyPushData" endpoint of the
+// "thirdPart" service.
+func NewReceiveThirdPartyPushDataBadRequestResponseBody(res *goa.ServiceError) *ReceiveThirdPartyPushDataBadRequestResponseBody {
+	body := &ReceiveThirdPartyPushDataBadRequestResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewReceiveThirdPartyPushDataInternalServerErrorResponseBody builds the HTTP
+// response body from the result of the "ReceiveThirdPartyPushData" endpoint of
+// the "thirdPart" service.
+func NewReceiveThirdPartyPushDataInternalServerErrorResponseBody(res *goa.ServiceError) *ReceiveThirdPartyPushDataInternalServerErrorResponseBody {
+	body := &ReceiveThirdPartyPushDataInternalServerErrorResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
 // NewGormRelatedSearchBadRequestResponseBody builds the HTTP response body
 // from the result of the "GormRelatedSearch" endpoint of the "thirdPart"
 // service.
@@ -232,4 +334,31 @@ func NewGormRelatedSearchInternalServerErrorResponseBody(res *goa.ServiceError) 
 		Fault:     res.Fault,
 	}
 	return body
+}
+
+// NewReceiveThirdPartyPushDataPayload builds a thirdPart service
+// ReceiveThirdPartyPushData endpoint payload.
+func NewReceiveThirdPartyPushDataPayload(body *ReceiveThirdPartyPushDataRequestBody) *thirdpart.ReceiveThirdPartyPushDataPayload {
+	v := &thirdpart.ReceiveThirdPartyPushDataPayload{
+		MethodName: *body.MethodName,
+		Count:      *body.Count,
+		Data:       body.Data,
+	}
+
+	return v
+}
+
+// ValidateReceiveThirdPartyPushDataRequestBody runs the validations defined on
+// ReceiveThirdPartyPushDataRequestBody
+func ValidateReceiveThirdPartyPushDataRequestBody(body *ReceiveThirdPartyPushDataRequestBody) (err error) {
+	if body.MethodName == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("methodName", "body"))
+	}
+	if body.Count == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("count", "body"))
+	}
+	if body.Data == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("data", "body"))
+	}
+	return
 }

@@ -1,6 +1,7 @@
 package starter
 
 import (
+	controller "boot/controller"
 	"context"
 	"net/http"
 	"os"
@@ -13,10 +14,11 @@ import (
 	httpmdlwr "goa.design/goa/v3/http/middleware"
 	"goa.design/goa/v3/middleware"
 
-	usersvr "boot/gen/http/user/server"
-	log "boot/gen/log"
-	"boot/gen/user"
+	"boot/gen/log"
 	mdlwr "boot/middleware"
+
+	usersvr "boot/gen/http/user/server"
+	"boot/gen/user"
 
 	entityhall "boot/gen/entity_hall"
 	entityhallsvr "boot/gen/http/entity_hall/server"
@@ -26,6 +28,12 @@ import (
 
 	thirdpartsvr "boot/gen/http/third_part/server"
 	thirdpart "boot/gen/third_part"
+
+	importfilesvr "boot/gen/http/import_file/server"
+	importfile "boot/gen/import_file"
+
+	simulationsvr "boot/gen/http/simulation/server"
+	simulation "boot/gen/simulation"
 )
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
@@ -35,6 +43,8 @@ func handleHTTPServer(ctx context.Context, host string,
 	entityhallEndpoints *entityhall.Endpoints,
 	actualTimeEndpoints *actualtime.Endpoints,
 	thirdpartEndpoints *thirdpart.Endpoints,
+	importFileEndpoints *importfile.Endpoints,
+	simulationEndpoints *simulation.Endpoints,
 	wg *sync.WaitGroup, errc chan error,
 	logger *log.Logger, metrics *metrics.Prometheus, debug bool) {
 
@@ -71,6 +81,8 @@ func handleHTTPServer(ctx context.Context, host string,
 		entityhallServer *entityhallsvr.Server
 		actualTimeServer *actualtimesvr.Server
 		thirdpartServer  *thirdpartsvr.Server
+		importFileServer *importfilesvr.Server
+		simulationServer *simulationsvr.Server
 	)
 	{
 		eh := errorHandler(logger)
@@ -78,12 +90,17 @@ func handleHTTPServer(ctx context.Context, host string,
 		entityhallServer = entityhallsvr.New(entityhallEndpoints, mux, dec, enc, eh, mdlwr.GoaErrorFormatterFunc)
 		actualTimeServer = actualtimesvr.New(actualTimeEndpoints, mux, dec, enc, eh, mdlwr.GoaErrorFormatterFunc)
 		thirdpartServer = thirdpartsvr.New(thirdpartEndpoints, mux, dec, enc, eh, mdlwr.GoaErrorFormatterFunc)
+
+		importFileServer = importfilesvr.New(importFileEndpoints, mux, dec, enc, eh, mdlwr.GoaErrorFormatterFunc, controller.FileImportDecoderFunc)
+		simulationServer = simulationsvr.New(simulationEndpoints, mux, dec, enc, eh, mdlwr.GoaErrorFormatterFunc)
 	}
 	// Configure the mux.
 	usersvr.Mount(mux, userServer)
 	entityhallsvr.Mount(mux, entityhallServer)
 	actualtimesvr.Mount(mux, actualTimeServer)
 	thirdpartsvr.Mount(mux, thirdpartServer)
+	importfilesvr.Mount(mux, importFileServer)
+	simulationsvr.Mount(mux, simulationServer)
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
 	// here apply to all the service endpoints.
 	var handler http.Handler = mux

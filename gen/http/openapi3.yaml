@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
-  title: 微服务
+  title: goa微服务
   version: "1.0"
 servers:
 - url: http://localhost:8000/starter
-  description: 微服务
+  description: goa微服务
 paths:
   /api/actual_time/get_actual_time_data:
     get:
@@ -37,8 +37,8 @@ paths:
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: true
-                timeout: false
+                temporary: false
+                timeout: true
         "500":
           description: ""
           content:
@@ -46,7 +46,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
+                fault: false
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
@@ -91,7 +91,7 @@ paths:
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: false
+                temporary: true
                 timeout: true
         "500":
           description: ""
@@ -100,7 +100,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
+                fault: false
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
@@ -147,7 +147,159 @@ paths:
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: false
+                temporary: true
+                timeout: true
+        "500":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: true
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: true
+                timeout: false
+  /api/import_file/crowd_runs_little:
+    post:
+      tags:
+      - import_file
+      summary: 群众少跑腿
+      description: 群众少跑腿
+      operationId: import_file#CrowdRunsLittle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WaitLineOverviewRequestBody'
+            example:
+              endDate: "2020-07-27"
+              regionCode: "520100"
+              startDate: "2019-07-27"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrowdRunsLittleResponseBody'
+              example:
+                data:
+                  mattersAccounted:
+                  - AfterAscension: 120
+                    beforeAscension: 120
+                  - AfterAscension: 120
+                    beforeAscension: 120
+                  mattersAccountedProportion: 0.8
+                errcode: 0
+                errmsg: ""
+        "400":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: true
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: true
+                timeout: true
+        "500":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: false
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: true
+                timeout: false
+  /api/import_file/get_import_excel_file_info:
+    get:
+      tags:
+      - import_file
+      summary: 获取插入excel数据统计信息
+      description: 获取插入excel数据统计信息
+      operationId: import_file#GetImportExcelFileInfo
+      parameters:
+      - name: endYear
+        in: query
+        description: 结束年份
+        allowEmptyValue: true
+        required: true
+        schema:
+          type: integer
+          description: 结束年份
+          example: 2020
+          format: int64
+        example: 2020
+      - name: area
+        in: query
+        description: 区域代码
+        allowEmptyValue: true
+        schema:
+          type: string
+          description: 区域代码
+          example: "520103"
+        example: "520103"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FourDoCountResp'
+              example:
+                immediateInfoCount:
+                - count: 8618130149726945015
+                  year: 144328607719150468
+                - count: 8618130149726945015
+                  year: 144328607719150468
+                - count: 8618130149726945015
+                  year: 144328607719150468
+                nearbyInfoCount:
+                - count: 8618130149726945015
+                  year: 144328607719150468
+                - count: 8618130149726945015
+                  year: 144328607719150468
+                - count: 8618130149726945015
+                  year: 144328607719150468
+                onceInfoCount:
+                - count: 8618130149726945015
+                  year: 144328607719150468
+                - count: 8618130149726945015
+                  year: 144328607719150468
+                - count: 8618130149726945015
+                  year: 144328607719150468
+                onlineInfoCount:
+                - count: 8618130149726945015
+                  year: 144328607719150468
+                - count: 8618130149726945015
+                  year: 144328607719150468
+                - count: 8618130149726945015
+                  year: 144328607719150468
+                - count: 8618130149726945015
+                  year: 144328607719150468
+        "400":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: false
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: true
                 timeout: false
         "500":
           description: ""
@@ -160,8 +312,281 @@ paths:
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
+                temporary: true
+                timeout: false
+  /api/import_file/import_excel_file:
+    post:
+      tags:
+      - import_file
+      summary: 批量导入
+      description: excel数据批量导入，导入数据采用json格式存储
+      operationId: import_file#ImportExcelFile
+      parameters:
+      - name: X-Area
+        in: header
+        description: 区域
+        allowEmptyValue: true
+        required: true
+        schema:
+          type: string
+          description: 区域
+          example: abc
+          minLength: 1
+        example: abc
+      - name: X-Year
+        in: header
+        description: 年份
+        allowEmptyValue: true
+        required: true
+        schema:
+          type: integer
+          description: 年份
+          example: 2020
+          format: int64
+        example: 2020
+      - name: X-Type
+        in: header
+        description: 类型
+        allowEmptyValue: true
+        required: true
+        schema:
+          type: integer
+          description: 类型
+          example: 1
+          format: int64
+        example: 1
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ImportExcelFileRequestBody'
+            example:
+              file:
+              - 108
+              - 122
+              - 112
+              filename: 3nb
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResult'
+              example:
+                ok: true
+        "400":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: true
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: false
+                timeout: false
+        "500":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: false
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: true
+                timeout: true
+  /api/import_file/reform_of_administrative:
+    post:
+      tags:
+      - import_file
+      summary: 行政审批制度改革事项详情
+      description: 行政审批制度改革事项详情
+      operationId: import_file#ReformOfAdministrative
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WaitLineOverviewRequestBody'
+            example:
+              endDate: "2020-07-27"
+              regionCode: "520100"
+              startDate: "2019-07-27"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReformOfAdministrativeResponseBody'
+              example:
+                data:
+                  pastSplitCount: 65
+                  splitCount: 48
+                  splitRate: 32.5
+                errcode: 0
+                errmsg: ""
+        "400":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: false
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: true
+                timeout: false
+        "500":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: true
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: true
+                timeout: false
+  /api/simulation/get_data:
+    post:
+      tags:
+      - simulation
+      summary: 获取模拟数据
+      description: 获取模拟数据
+      operationId: simulation#GetData
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetDataRequestBody'
+            example:
+              key: 对应模块
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDataResponseBody'
+              example:
+                data:
+                  isShowMock: true
+                  key: 对应模块
+                  orderBy: 1
+                  orderTimeScope: 1
+                  val: 对应值
+                errcode: 0
+                errmsg: ""
+        "400":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: false
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: true
+                timeout: true
+        "500":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: false
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: true
+                timeout: true
+      security:
+      - jwt_header_Authorization:
+        - role:user
+        - role:admin
+        - api:read
+        - api:write
+        - api:admin
+  /api/simulation/set_data:
+    post:
+      tags:
+      - simulation
+      summary: 设置数据
+      description: 设置数据
+      operationId: simulation#SetData
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetDataRequestBody'
+            example:
+              isShowMock: true
+              key: 对应模块
+              orderBy: 1
+              orderTimeScope: 1
+              val: 对应值
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetDataResponseBody'
+              example:
+                errcode: 0
+                errmsg: ""
+                result:
+                  ok: true
+        "400":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: false
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
                 temporary: false
                 timeout: true
+        "500":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: true
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: true
+                timeout: false
+      security:
+      - jwt_header_Authorization:
+        - role:user
+        - role:admin
+        - api:read
+        - api:write
+        - api:admin
   /api/third_part/get_hall_management_data:
     get:
       tags:
@@ -193,11 +618,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
+                fault: false
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: true
+                temporary: false
                 timeout: false
         "500":
           description: ""
@@ -206,11 +631,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
+                fault: false
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: true
+                temporary: false
                 timeout: true
   /api/third_part/gorm_related_search:
     get:
@@ -252,30 +677,6 @@ paths:
                     userId: 王大锤
                   id: 1035
                   name: 小白
-                - companies:
-                  - industry: 1036
-                    name: 青朵教育
-                    userId: 王大锤
-                  - industry: 1036
-                    name: 青朵教育
-                    userId: 王大锤
-                  - industry: 1036
-                    name: 青朵教育
-                    userId: 王大锤
-                  id: 1035
-                  name: 小白
-                - companies:
-                  - industry: 1036
-                    name: 青朵教育
-                    userId: 王大锤
-                  - industry: 1036
-                    name: 青朵教育
-                    userId: 王大锤
-                  - industry: 1036
-                    name: 青朵教育
-                    userId: 王大锤
-                  id: 1035
-                  name: 小白
                 errcode: 0
                 errmsg: ""
         "400":
@@ -289,7 +690,61 @@ paths:
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: false
+                temporary: true
+                timeout: false
+        "500":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: false
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: true
+                timeout: false
+  /api/third_part/receive_third_party_push_data:
+    post:
+      tags:
+      - thirdPart
+      summary: 接收第三方推送数据
+      description: 接收第三方推送数据--大厅排队办事实时图基础数据--排号、叫号、办结、评价四阶段
+      operationId: thirdPart#ReceiveThirdPartyPushData
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiveThirdPartyPushDataRequestBody'
+            example:
+              count: 21
+              data: ""
+              methodName: 1
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReceiveThirdPartyPushDataResponseBody'
+              example:
+                errcode: 0
+                errmsg: ""
+                result: getDataSuccess
+        "400":
+          description: ""
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                fault: true
+                id: 123abc
+                message: parameter 'p' must be an integer
+                name: bad_request
+                temporary: true
                 timeout: true
         "500":
           description: ""
@@ -303,7 +758,7 @@ paths:
                 message: parameter 'p' must be an integer
                 name: bad_request
                 temporary: false
-                timeout: true
+                timeout: false
   /api/user/get_captcha_image:
     post:
       tags:
@@ -320,8 +775,8 @@ paths:
                 $ref: '#/components/schemas/GetCaptchaImageResponseBody'
               example:
                 data:
-                  captchaId: Debitis velit inventore.
-                  image: Facilis architecto voluptatem magni magni odit sit.
+                  captchaId: Excepturi et quo.
+                  image: Ipsam earum aliquam quo voluptate dolor ab.
                 errcode: 0
                 errmsg: ""
         "400":
@@ -331,11 +786,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
+                fault: false
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: false
+                temporary: true
                 timeout: true
         "500":
           description: ""
@@ -349,7 +804,7 @@ paths:
                 message: parameter 'p' must be an integer
                 name: bad_request
                 temporary: false
-                timeout: true
+                timeout: false
   /api/user/login_by_mobile:
     post:
       tags:
@@ -375,17 +830,17 @@ paths:
                 $ref: '#/components/schemas/LoginByUsernameResponseBody'
               example:
                 data:
-                  cookie: Eos optio ea voluptas voluptatem magnam nostrum.
+                  cookie: Nesciunt dolorem.
                   credentials:
                     expires_in: 25200
                     token: eyJhbGciOiJIUz...
                   user:
-                    id: Ipsam magni quia minus officiis.
+                    id: Molestiae at nihil sed.
                     isActive: true
-                    loginTime: Atque sed occaecati optio.
-                    mobile: Nihil sed eaque consequuntur.
-                    nickname: Quasi molestiae.
-                    username: Eum et repellat itaque itaque delectus.
+                    loginTime: Perspiciatis quasi et optio molestias optio aut.
+                    mobile: Eos optio ea voluptas voluptatem magnam nostrum.
+                    nickname: Atque sed occaecati optio.
+                    username: Consequuntur nostrum.
                 errcode: 0
                 errmsg: ""
         "400":
@@ -400,7 +855,7 @@ paths:
                 message: parameter 'p' must be an integer
                 name: bad_request
                 temporary: false
-                timeout: true
+                timeout: false
         "500":
           description: ""
           content:
@@ -412,8 +867,8 @@ paths:
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: false
-                timeout: true
+                temporary: true
+                timeout: false
   /api/user/login_by_username:
     post:
       tags:
@@ -428,8 +883,8 @@ paths:
             schema:
               $ref: '#/components/schemas/LoginByUsernameRequestBody'
             example:
-              captchaId: zs
-              humanCode: rhb
+              captchaId: "y"
+              humanCode: 5wj
               password: password
               username: user
       responses:
@@ -441,17 +896,17 @@ paths:
                 $ref: '#/components/schemas/LoginByUsernameResponseBody'
               example:
                 data:
-                  cookie: Eos optio ea voluptas voluptatem magnam nostrum.
+                  cookie: Nesciunt dolorem.
                   credentials:
                     expires_in: 25200
                     token: eyJhbGciOiJIUz...
                   user:
-                    id: Ipsam magni quia minus officiis.
+                    id: Molestiae at nihil sed.
                     isActive: true
-                    loginTime: Atque sed occaecati optio.
-                    mobile: Nihil sed eaque consequuntur.
-                    nickname: Quasi molestiae.
-                    username: Eum et repellat itaque itaque delectus.
+                    loginTime: Perspiciatis quasi et optio molestias optio aut.
+                    mobile: Eos optio ea voluptas voluptatem magnam nostrum.
+                    nickname: Atque sed occaecati optio.
+                    username: Consequuntur nostrum.
                 errcode: 0
                 errmsg: ""
         "400":
@@ -461,11 +916,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: false
+                fault: true
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: true
+                temporary: false
                 timeout: false
         "500":
           description: ""
@@ -474,7 +929,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
+                fault: false
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
@@ -494,9 +949,9 @@ paths:
             schema:
               $ref: '#/components/schemas/SendSmsCodeRequestBody'
             example:
-              captchaId: urr
-              humanCode: tmh
-              mobile: jve
+              captchaId: c
+              humanCode: tw4
+              mobile: wmi
       responses:
         "200":
           description: ""
@@ -520,8 +975,8 @@ paths:
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: true
-                timeout: true
+                temporary: false
+                timeout: false
         "500":
           description: ""
           content:
@@ -529,11 +984,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                fault: true
+                fault: false
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: true
+                temporary: false
                 timeout: false
   /api/user/update_password:
     post:
@@ -574,8 +1029,8 @@ paths:
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: false
-                timeout: false
+                temporary: true
+                timeout: true
         "500":
           description: ""
           content:
@@ -587,12 +1042,15 @@ paths:
                 id: 123abc
                 message: parameter 'p' must be an integer
                 name: bad_request
-                temporary: false
-                timeout: false
+                temporary: true
+                timeout: true
       security:
       - jwt_header_Authorization:
         - role:user
         - role:admin
+        - api:read
+        - api:write
+        - api:admin
 components:
   schemas:
     Canaldataresp:
@@ -621,14 +1079,14 @@ components:
         captchaId:
           type: string
           description: 验证码ID
-          example: Saepe nisi qui reiciendis et quisquam.
+          example: Porro quo error aut provident dolores sapiente.
         image:
           type: string
           description: 图片base64
-          example: Est et ut veniam corporis et.
+          example: Debitis qui aut.
       example:
-        captchaId: Nihil quae saepe et facilis.
-        image: Et quaerat et est doloribus repudiandae.
+        captchaId: Voluptate et laborum neque.
+        image: Saepe adipisci.
       required:
       - image
       - captchaId
@@ -675,13 +1133,77 @@ components:
       required:
       - token
       - expires_in
+    CrowdRunsLittleResponseBody:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Crowdrunslittleresp'
+        errcode:
+          type: integer
+          description: 错误码
+          example: 0
+          minimum: 0
+          maximum: 999999
+        errmsg:
+          type: string
+          description: 错误消息
+          example: ""
+      example:
+        data:
+          mattersAccounted:
+          - AfterAscension: 120
+            beforeAscension: 120
+          - AfterAscension: 120
+            beforeAscension: 120
+          mattersAccountedProportion: 0.8
+        errcode: 0
+        errmsg: ""
+      required:
+      - errcode
+      - errmsg
+      - data
+    Crowdrunslittleresp:
+      type: object
+      properties:
+        mattersAccounted:
+          type: array
+          items:
+            $ref: '#/components/schemas/Matternumber'
+          description: 总事项不同年份数据
+          example:
+          - AfterAscension: 120
+            beforeAscension: 120
+          - AfterAscension: 120
+            beforeAscension: 120
+          - AfterAscension: 120
+            beforeAscension: 120
+        mattersAccountedProportion:
+          type: number
+          description: 最多跑一次事项占比提升比例
+          example: 0.8
+          format: float
+      description: 群众少跑腿返回值
+      example:
+        mattersAccounted:
+        - AfterAscension: 120
+          beforeAscension: 120
+        - AfterAscension: 120
+          beforeAscension: 120
+        - AfterAscension: 120
+          beforeAscension: 120
+        - AfterAscension: 120
+          beforeAscension: 120
+        mattersAccountedProportion: 0.8
+      required:
+      - mattersAccounted
+      - mattersAccountedProportion
     Error:
       type: object
       properties:
         fault:
           type: boolean
           description: Is the error a server-side fault?
-          example: false
+          example: true
         id:
           type: string
           description: ID is a unique identifier for this particular occurrence of
@@ -705,11 +1227,11 @@ components:
           description: Is the error a timeout?
           example: false
       example:
-        fault: true
+        fault: false
         id: 123abc
         message: parameter 'p' must be an integer
         name: bad_request
-        temporary: true
+        temporary: false
         timeout: true
       required:
       - name
@@ -718,6 +1240,103 @@ components:
       - temporary
       - timeout
       - fault
+    FourDoCountResp:
+      type: object
+      properties:
+        immediateInfoCount:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fourdo'
+          example:
+          - count: 8618130149726945015
+            year: 144328607719150468
+          - count: 8618130149726945015
+            year: 144328607719150468
+          - count: 8618130149726945015
+            year: 144328607719150468
+          - count: 8618130149726945015
+            year: 144328607719150468
+        nearbyInfoCount:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fourdo'
+          example:
+          - count: 8618130149726945015
+            year: 144328607719150468
+          - count: 8618130149726945015
+            year: 144328607719150468
+          - count: 8618130149726945015
+            year: 144328607719150468
+        onceInfoCount:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fourdo'
+          example:
+          - count: 8618130149726945015
+            year: 144328607719150468
+          - count: 8618130149726945015
+            year: 144328607719150468
+          - count: 8618130149726945015
+            year: 144328607719150468
+        onlineInfoCount:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fourdo'
+          example:
+          - count: 8618130149726945015
+            year: 144328607719150468
+          - count: 8618130149726945015
+            year: 144328607719150468
+      example:
+        immediateInfoCount:
+        - count: 8618130149726945015
+          year: 144328607719150468
+        - count: 8618130149726945015
+          year: 144328607719150468
+        - count: 8618130149726945015
+          year: 144328607719150468
+        - count: 8618130149726945015
+          year: 144328607719150468
+        nearbyInfoCount:
+        - count: 8618130149726945015
+          year: 144328607719150468
+        - count: 8618130149726945015
+          year: 144328607719150468
+        onceInfoCount:
+        - count: 8618130149726945015
+          year: 144328607719150468
+        - count: 8618130149726945015
+          year: 144328607719150468
+        onlineInfoCount:
+        - count: 8618130149726945015
+          year: 144328607719150468
+        - count: 8618130149726945015
+          year: 144328607719150468
+      required:
+      - immediateInfoCount
+      - onlineInfoCount
+      - nearbyInfoCount
+      - onceInfoCount
+    Fourdo:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: 数量
+          example: 5835711761455568042
+          format: int64
+        year:
+          type: integer
+          description: 年份
+          example: 1061867699694468822
+          format: int64
+      description: 四个办统计
+      example:
+        count: 967817043308539909
+        year: 8894510629519852694
+      required:
+      - year
+      - count
     GetActualTimeDataResponseBody:
       type: object
       properties:
@@ -757,6 +1376,9 @@ components:
           - cardNum: "1035"
             name: 小白
             ouName: 社保
+          - cardNum: "1035"
+            name: 小白
+            ouName: 社保
         errcode:
           type: integer
           description: 错误码
@@ -769,9 +1391,6 @@ components:
           example: ""
       example:
         data:
-        - cardNum: "1035"
-          name: 小白
-          ouName: 社保
         - cardNum: "1035"
           name: 小白
           ouName: 社保
@@ -804,13 +1423,88 @@ components:
           example: ""
       example:
         data:
-          captchaId: Debitis velit inventore.
-          image: Facilis architecto voluptatem magni magni odit sit.
+          captchaId: Excepturi et quo.
+          image: Ipsam earum aliquam quo voluptate dolor ab.
         errcode: 0
         errmsg: ""
       required:
       - errcode
       - errmsg
+    GetDataRequestBody:
+      type: object
+      properties:
+        key:
+          type: string
+          description: 对应模块
+          example: 对应模块
+      example:
+        key: 对应模块
+      required:
+      - key
+    GetDataResponseBody:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Getdataresp'
+        errcode:
+          type: integer
+          description: 错误码
+          example: 0
+          minimum: 0
+          maximum: 999999
+        errmsg:
+          type: string
+          description: 错误消息
+          example: ""
+      example:
+        data:
+          isShowMock: true
+          key: 对应模块
+          orderBy: 1
+          orderTimeScope: 1
+          val: 对应值
+        errcode: 0
+        errmsg: ""
+      required:
+      - errcode
+      - errmsg
+      - data
+    Getdataresp:
+      type: object
+      properties:
+        isShowMock:
+          type: boolean
+          description: 是否显示配置项
+          example: true
+        key:
+          type: string
+          description: 对应模块
+          example: 对应模块
+        orderBy:
+          type: integer
+          description: 1.通过评分正序 2.通过评分倒序
+          example: 1
+          format: int64
+        orderTimeScope:
+          type: integer
+          description: 1.按年统计 2.按月统计
+          example: 1
+          format: int64
+        val:
+          type: string
+          description: 对应值
+          example: 对应值
+      description: 获取模拟数据结果
+      example:
+        isShowMock: true
+        key: 对应模块
+        orderBy: 1
+        orderTimeScope: 1
+        val: 对应值
+      required:
+      - key
+      - val
+      - isShowMock
     GormRelatedSearchResponseBody:
       type: object
       properties:
@@ -819,30 +1513,6 @@ components:
           items:
             $ref: '#/components/schemas/Legalpersonuserresp'
           example:
-          - companies:
-            - industry: 1036
-              name: 青朵教育
-              userId: 王大锤
-            - industry: 1036
-              name: 青朵教育
-              userId: 王大锤
-            - industry: 1036
-              name: 青朵教育
-              userId: 王大锤
-            id: 1035
-            name: 小白
-          - companies:
-            - industry: 1036
-              name: 青朵教育
-              userId: 王大锤
-            - industry: 1036
-              name: 青朵教育
-              userId: 王大锤
-            - industry: 1036
-              name: 青朵教育
-              userId: 王大锤
-            id: 1035
-            name: 小白
           - companies:
             - industry: 1036
               name: 青朵教育
@@ -957,6 +1627,31 @@ components:
       - cardNum
       - name
       - ouName
+    ImportExcelFileRequestBody:
+      type: object
+      properties:
+        file:
+          type: string
+          description: 上传文件内容
+          example:
+          - 115
+          - 122
+          - 107
+          maxLength: 52428800
+        filename:
+          type: string
+          description: 文件名
+          example: tt7
+          maxLength: 128
+      example:
+        file:
+        - 118
+        - 114
+        - 107
+        filename: y57
+      required:
+      - file
+      - filename
     Legalpersonuserresp:
       type: object
       properties:
@@ -966,9 +1661,6 @@ components:
             $ref: '#/components/schemas/Companyprofileresp'
           description: 公司
           example:
-          - industry: 1036
-            name: 青朵教育
-            userId: 王大锤
           - industry: 1036
             name: 青朵教育
             userId: 王大锤
@@ -1030,14 +1722,14 @@ components:
           type: string
           description: 图形验证码ID
           default: ""
-          example: 4e
+          example: "1"
           minLength: 1
           maxLength: 128
         humanCode:
           type: string
           description: 图形验证码
           default: ""
-          example: w8i
+          example: 3t0
           minLength: 4
           maxLength: 8
         password:
@@ -1053,8 +1745,8 @@ components:
           minLength: 1
           maxLength: 128
       example:
-        captchaId: z1
-        humanCode: kiv
+        captchaId: fbq
+        humanCode: 6w9
         password: password
         username: user
       required:
@@ -1077,22 +1769,42 @@ components:
           example: ""
       example:
         data:
-          cookie: Eos optio ea voluptas voluptatem magnam nostrum.
+          cookie: Nesciunt dolorem.
           credentials:
             expires_in: 25200
             token: eyJhbGciOiJIUz...
           user:
-            id: Ipsam magni quia minus officiis.
+            id: Molestiae at nihil sed.
             isActive: true
-            loginTime: Atque sed occaecati optio.
-            mobile: Nihil sed eaque consequuntur.
-            nickname: Quasi molestiae.
-            username: Eum et repellat itaque itaque delectus.
+            loginTime: Perspiciatis quasi et optio molestias optio aut.
+            mobile: Eos optio ea voluptas voluptatem magnam nostrum.
+            nickname: Atque sed occaecati optio.
+            username: Consequuntur nostrum.
         errcode: 0
         errmsg: ""
       required:
       - errcode
       - errmsg
+    Matternumber:
+      type: object
+      properties:
+        AfterAscension:
+          type: integer
+          description: 提升后
+          example: 120
+          format: int32
+        beforeAscension:
+          type: integer
+          description: 提升前
+          example: 120
+          format: int32
+      description: 事项数
+      example:
+        AfterAscension: 120
+        beforeAscension: 120
+      required:
+      - beforeAscension
+      - AfterAscension
     ReceiveThirdPartyPushDataRequestBody:
       type: object
       properties:
@@ -1144,31 +1856,84 @@ components:
       - errcode
       - errmsg
       - result
+    ReformOfAdministrativeResponseBody:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Reformofadministrativeresp'
+        errcode:
+          type: integer
+          description: 错误码
+          example: 0
+          minimum: 0
+          maximum: 999999
+        errmsg:
+          type: string
+          description: 错误消息
+          example: ""
+      example:
+        data:
+          pastSplitCount: 65
+          splitCount: 48
+          splitRate: 32.5
+        errcode: 0
+        errmsg: ""
+      required:
+      - errcode
+      - errmsg
+      - data
+    Reformofadministrativeresp:
+      type: object
+      properties:
+        pastSplitCount:
+          type: integer
+          description: 去年事项大项拆分
+          example: 65
+          format: int32
+        splitCount:
+          type: integer
+          description: 今年事项大项拆分
+          example: 48
+          format: int32
+        splitRate:
+          type: number
+          description: 事项拆分比率
+          example: 32.5
+          format: float
+      description: 行政审批制度改革事项详情
+      example:
+        pastSplitCount: 65
+        splitCount: 48
+        splitRate: 32.5
+      required:
+      - splitCount
+      - pastSplitCount
+      - splitRate
     SendSmsCodeRequestBody:
       type: object
       properties:
         captchaId:
           type: string
           description: 图形验证码ID
-          example: "0"
+          example: 7i
           minLength: 1
           maxLength: 128
         humanCode:
           type: string
           description: 图形验证码
-          example: 2y6
+          example: 0un
           minLength: 4
           maxLength: 8
         mobile:
           type: string
           description: 手机号
-          example: ebk
+          example: r58
           minLength: 11
           maxLength: 11
       example:
-        captchaId: u4k
-        humanCode: xq7
-        mobile: k7o
+        captchaId: r7x
+        humanCode: v67
+        mobile: 4u3
       required:
       - mobile
       - humanCode
@@ -1178,36 +1943,96 @@ components:
       properties:
         cookie:
           type: string
-          example: Optio sit unde eum est.
+          example: Adipisci repellendus quo iusto sit voluptatibus aliquid.
         credentials:
           $ref: '#/components/schemas/Credentials'
         user:
           $ref: '#/components/schemas/User'
       description: 会话
       example:
-        cookie: Ut nesciunt voluptatibus.
+        cookie: Et quo dolores facilis rem quia doloribus.
         credentials:
           expires_in: 25200
           token: eyJhbGciOiJIUz...
         user:
-          id: Ipsam magni quia minus officiis.
+          id: Molestiae at nihil sed.
           isActive: true
-          loginTime: Atque sed occaecati optio.
-          mobile: Nihil sed eaque consequuntur.
-          nickname: Quasi molestiae.
-          username: Eum et repellat itaque itaque delectus.
+          loginTime: Perspiciatis quasi et optio molestias optio aut.
+          mobile: Eos optio ea voluptas voluptatem magnam nostrum.
+          nickname: Atque sed occaecati optio.
+          username: Consequuntur nostrum.
       required:
       - user
       - credentials
       - cookie
-    Successresult:
+    SetDataRequestBody:
+      type: object
+      properties:
+        isShowMock:
+          type: boolean
+          description: 是否显示配置项
+          example: true
+        key:
+          type: string
+          description: 对应模块
+          example: 对应模块
+        orderBy:
+          type: integer
+          description: 1、按评价分正序;2、按评价分倒序
+          default: 1
+          example: 1
+          format: int64
+        orderTimeScope:
+          type: integer
+          description: 1、按当年度评价;2、按上个月评价
+          default: 1
+          example: 1
+          format: int64
+        val:
+          type: string
+          description: 对应值
+          example: 对应值
+      example:
+        isShowMock: true
+        key: 对应模块
+        orderBy: 1
+        orderTimeScope: 1
+        val: 对应值
+      required:
+      - key
+      - val
+      - isShowMock
+    SetDataResponseBody:
+      type: object
+      properties:
+        errcode:
+          type: integer
+          description: 错误码
+          example: 0
+          minimum: 0
+          maximum: 999999
+        errmsg:
+          type: string
+          description: 错误消息
+          example: ""
+        result:
+          $ref: '#/components/schemas/SuccessResult'
+      example:
+        errcode: 0
+        errmsg: ""
+        result:
+          ok: true
+      required:
+      - errcode
+      - errmsg
+      - result
+    SuccessResult:
       type: object
       properties:
         ok:
           type: boolean
           description: success
           example: true
-      description: 成功信息
       example:
         ok: true
       required:
@@ -1235,7 +2060,7 @@ components:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/Successresult'
+          $ref: '#/components/schemas/SuccessResult'
         errcode:
           type: integer
           description: 错误码
@@ -1260,7 +2085,7 @@ components:
         id:
           type: string
           description: ID
-          example: Quae voluptatem facere vel ratione velit.
+          example: Doloremque porro.
         isActive:
           type: boolean
           description: 是否可用
@@ -1269,27 +2094,27 @@ components:
           type: string
           description: 登陆时间
           default: "00:00:00"
-          example: Consequatur est.
+          example: Occaecati voluptate.
         mobile:
           type: string
           description: 手机号
-          example: Eos qui eum ipsa.
+          example: Sit dolorem occaecati est.
         nickname:
           type: string
           description: 昵称
-          example: Voluptas est repellat ab.
+          example: A minus commodi officiis pariatur sapiente.
         username:
           type: string
           description: 用户名
-          example: Rerum voluptatem saepe et id fuga.
+          example: Aperiam minus ut tempore.
       description: 用户
       example:
-        id: Quibusdam quae.
-        isActive: false
-        loginTime: Fuga eum.
-        mobile: Officia alias ducimus dolorem.
-        nickname: Consequatur nihil tempora.
-        username: Voluptatem et voluptas perspiciatis excepturi nesciunt ipsam.
+        id: Aut ducimus voluptatem consequatur dolor.
+        isActive: true
+        loginTime: Laborum architecto laudantium autem eum sit dolores.
+        mobile: Cumque et quidem dolorem id veritatis non.
+        nickname: Neque quia.
+        username: Voluptas dolores vero consequuntur.
       required:
       - id
       - username
@@ -1365,5 +2190,5 @@ components:
   securitySchemes:
     jwt_header_Authorization:
       type: http
-      description: JWT 认证
+      description: '使用 JWT 认证, 需要认证的接口添加 ```Header```: ```Authorization: Bearer {jwtToken}```'
       scheme: bearer

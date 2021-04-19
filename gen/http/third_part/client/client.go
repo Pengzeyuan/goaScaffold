@@ -21,6 +21,10 @@ type Client struct {
 	// GetActualTimeData endpoint.
 	GetActualTimeDataDoer goahttp.Doer
 
+	// ReceiveThirdPartyPushData Doer is the HTTP client used to make requests to
+	// the ReceiveThirdPartyPushData endpoint.
+	ReceiveThirdPartyPushDataDoer goahttp.Doer
+
 	// GormRelatedSearch Doer is the HTTP client used to make requests to the
 	// GormRelatedSearch endpoint.
 	GormRelatedSearchDoer goahttp.Doer
@@ -45,13 +49,14 @@ func NewClient(
 	restoreBody bool,
 ) *Client {
 	return &Client{
-		GetActualTimeDataDoer: doer,
-		GormRelatedSearchDoer: doer,
-		RestoreResponseBody:   restoreBody,
-		scheme:                scheme,
-		host:                  host,
-		decoder:               dec,
-		encoder:               enc,
+		GetActualTimeDataDoer:         doer,
+		ReceiveThirdPartyPushDataDoer: doer,
+		GormRelatedSearchDoer:         doer,
+		RestoreResponseBody:           restoreBody,
+		scheme:                        scheme,
+		host:                          host,
+		decoder:                       dec,
+		encoder:                       enc,
 	}
 }
 
@@ -69,6 +74,30 @@ func (c *Client) GetActualTimeData() goa.Endpoint {
 		resp, err := c.GetActualTimeDataDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("thirdPart", "GetActualTimeData", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// ReceiveThirdPartyPushData returns an endpoint that makes HTTP requests to
+// the thirdPart service ReceiveThirdPartyPushData server.
+func (c *Client) ReceiveThirdPartyPushData() goa.Endpoint {
+	var (
+		encodeRequest  = EncodeReceiveThirdPartyPushDataRequest(c.encoder)
+		decodeResponse = DecodeReceiveThirdPartyPushDataResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildReceiveThirdPartyPushDataRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.ReceiveThirdPartyPushDataDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("thirdPart", "ReceiveThirdPartyPushData", err)
 		}
 		return decodeResponse(resp)
 	}

@@ -10,6 +10,7 @@ package server
 import (
 	thirdpart "boot/gen/third_part"
 	"context"
+	"io"
 	"net/http"
 
 	goahttp "goa.design/goa/v3/http"
@@ -58,6 +59,83 @@ func EncodeGetActualTimeDataError(encoder func(context.Context, http.ResponseWri
 				body = formatter(res)
 			} else {
 				body = NewGetActualTimeDataInternalServerErrorResponseBody(res)
+			}
+			w.Header().Set("goa-error", "internal_server_error")
+			w.WriteHeader(http.StatusInternalServerError)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
+// EncodeReceiveThirdPartyPushDataResponse returns an encoder for responses
+// returned by the thirdPart ReceiveThirdPartyPushData endpoint.
+func EncodeReceiveThirdPartyPushDataResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res := v.(*thirdpart.ReceiveThirdPartyPushDataResult)
+		enc := encoder(ctx, w)
+		body := NewReceiveThirdPartyPushDataResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeReceiveThirdPartyPushDataRequest returns a decoder for requests sent
+// to the thirdPart ReceiveThirdPartyPushData endpoint.
+func DecodeReceiveThirdPartyPushDataRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			body ReceiveThirdPartyPushDataRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if err == io.EOF {
+				return nil, goa.MissingPayloadError()
+			}
+			return nil, goa.DecodePayloadError(err.Error())
+		}
+		err = ValidateReceiveThirdPartyPushDataRequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
+		payload := NewReceiveThirdPartyPushDataPayload(&body)
+
+		return payload, nil
+	}
+}
+
+// EncodeReceiveThirdPartyPushDataError returns an encoder for errors returned
+// by the ReceiveThirdPartyPushData thirdPart endpoint.
+func EncodeReceiveThirdPartyPushDataError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		en, ok := v.(ErrorNamer)
+		if !ok {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "bad_request":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewReceiveThirdPartyPushDataBadRequestResponseBody(res)
+			}
+			w.Header().Set("goa-error", "bad_request")
+			w.WriteHeader(http.StatusBadRequest)
+			return enc.Encode(body)
+		case "internal_server_error":
+			res := v.(*goa.ServiceError)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewReceiveThirdPartyPushDataInternalServerErrorResponseBody(res)
 			}
 			w.Header().Set("goa-error", "internal_server_error")
 			w.WriteHeader(http.StatusInternalServerError)

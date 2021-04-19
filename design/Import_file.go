@@ -80,4 +80,73 @@ var _ = Service("import_file", func() {
 		})
 	})
 
+	Method("ReformOfAdministrative", func() {
+		Description("行政审批制度改革事项详情")
+		Meta("swagger:summary", "行政审批制度改革事项详情")
+		Payload(func() {
+			Attribute("regionCode", String, "行政区划代码", func() {
+				Example("520100")
+			})
+			Attribute("startDate", String, "起始时间", func() {
+				Example("2019-07-27")
+			})
+			Attribute("endDate", String, "结束时间", func() {
+				Example("2020-07-27")
+			})
+			Required("regionCode")
+		})
+
+		Result(func() {
+			Attribute("errcode", Int, "错误码", func() {
+				Minimum(0)
+				Maximum(999999)
+				Example(0)
+			})
+			Attribute("errmsg", String, "错误消息", func() {
+				Example("")
+			})
+			Attribute("data", ReformOfAdministrativeResp)
+			Required("errcode", "errmsg", "data")
+		})
+
+		HTTP(func() {
+			POST("/reform_of_administrative")
+			Response(StatusOK)
+		})
+	})
+
+	Method("CrowdRunsLittle", func() {
+		Description("群众少跑腿")
+		Meta("swagger:summary", "群众少跑腿")
+		Payload(func() {
+			Attribute("regionCode", String, "行政区划代码", func() {
+				Example("520100")
+			})
+			Attribute("startDate", String, "起始时间", func() {
+				Example("2019-07-27")
+			})
+			Attribute("endDate", String, "结束时间", func() {
+				Example("2020-07-27")
+			})
+			Required("regionCode")
+		})
+
+		Result(func() {
+			Attribute("errcode", Int, "错误码", func() {
+				Minimum(0)
+				Maximum(999999)
+				Example(0)
+			})
+			Attribute("errmsg", String, "错误消息", func() {
+				Example("")
+			})
+			Attribute("data", CrowdRunsLittleResp)
+			Required("errcode", "errmsg", "data")
+		})
+
+		HTTP(func() {
+			POST("/crowd_runs_little")
+			Response(StatusOK)
+		})
+	})
 })

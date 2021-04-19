@@ -25,7 +25,9 @@ import (
 func UsageCommands() string {
 	return `actual-time (get-actual-time-data|receive-third-party-push-data)
 entity-hall wait-line-overview
-third-part (get-actual-time-data|gorm-related-search)
+third-part (get-actual-time-data|receive-third-party-push-data|gorm-related-search)
+import-file (import-excel-file|get-import-excel-file-info|reform-of-administrative|crowd-runs-little)
+simulation (set-data|get-data)
 user (login-by-username|login-by-sms-code|update-password|get-captcha-image|send-sms-code)
 `
 }
@@ -39,12 +41,17 @@ func UsageExamples() string {
       "startDate": "2019-07-27"
    }'` + "\n" +
 		os.Args[0] + ` third-part get-actual-time-data` + "\n" +
-		os.Args[0] + ` user login-by-username --body '{
-      "captchaId": "zs",
-      "humanCode": "rhb",
-      "password": "password",
-      "username": "user"
-   }'` + "\n" +
+		os.Args[0] + ` import-file import-excel-file --body '{
+      "file": "bHpw",
+      "filename": "3nb"
+   }' --area "abc" --year 2020 --type 1` + "\n" +
+		os.Args[0] + ` simulation set-data --body '{
+      "isShowMock": true,
+      "key": "对应模块",
+      "orderBy": 1,
+      "orderTimeScope": 1,
+      "val": "对应值"
+   }' --jwt-token "eyJhbGciOiJIUz..."` + "\n" +
 		""
 }
 
@@ -56,6 +63,7 @@ func ParseEndpoint(
 	enc func(*http.Request) goahttp.Encoder,
 	dec func(*http.Response) goahttp.Decoder,
 	restore bool,
+	importFileImportExcelFileEncoderFn importfilec.ImportFileImportExcelFileEncoderFunc,
 ) (goa.Endpoint, interface{}, error) {
 	var (
 		actualTimeFlags = flag.NewFlagSet("actual-time", flag.ContinueOnError)
@@ -74,7 +82,38 @@ func ParseEndpoint(
 
 		thirdPartGetActualTimeDataFlags = flag.NewFlagSet("get-actual-time-data", flag.ExitOnError)
 
+		thirdPartReceiveThirdPartyPushDataFlags    = flag.NewFlagSet("receive-third-party-push-data", flag.ExitOnError)
+		thirdPartReceiveThirdPartyPushDataBodyFlag = thirdPartReceiveThirdPartyPushDataFlags.String("body", "REQUIRED", "")
+
 		thirdPartGormRelatedSearchFlags = flag.NewFlagSet("gorm-related-search", flag.ExitOnError)
+
+		importFileFlags = flag.NewFlagSet("import-file", flag.ContinueOnError)
+
+		importFileImportExcelFileFlags    = flag.NewFlagSet("import-excel-file", flag.ExitOnError)
+		importFileImportExcelFileBodyFlag = importFileImportExcelFileFlags.String("body", "REQUIRED", "")
+		importFileImportExcelFileAreaFlag = importFileImportExcelFileFlags.String("area", "REQUIRED", "")
+		importFileImportExcelFileYearFlag = importFileImportExcelFileFlags.String("year", "REQUIRED", "")
+		importFileImportExcelFileTypeFlag = importFileImportExcelFileFlags.String("type", "REQUIRED", "")
+
+		importFileGetImportExcelFileInfoFlags       = flag.NewFlagSet("get-import-excel-file-info", flag.ExitOnError)
+		importFileGetImportExcelFileInfoEndYearFlag = importFileGetImportExcelFileInfoFlags.String("end-year", "REQUIRED", "")
+		importFileGetImportExcelFileInfoAreaFlag    = importFileGetImportExcelFileInfoFlags.String("area", "", "")
+
+		importFileReformOfAdministrativeFlags    = flag.NewFlagSet("reform-of-administrative", flag.ExitOnError)
+		importFileReformOfAdministrativeBodyFlag = importFileReformOfAdministrativeFlags.String("body", "REQUIRED", "")
+
+		importFileCrowdRunsLittleFlags    = flag.NewFlagSet("crowd-runs-little", flag.ExitOnError)
+		importFileCrowdRunsLittleBodyFlag = importFileCrowdRunsLittleFlags.String("body", "REQUIRED", "")
+
+		simulationFlags = flag.NewFlagSet("simulation", flag.ContinueOnError)
+
+		simulationSetDataFlags        = flag.NewFlagSet("set-data", flag.ExitOnError)
+		simulationSetDataBodyFlag     = simulationSetDataFlags.String("body", "REQUIRED", "")
+		simulationSetDataJWTTokenFlag = simulationSetDataFlags.String("jwt-token", "", "")
+
+		simulationGetDataFlags        = flag.NewFlagSet("get-data", flag.ExitOnError)
+		simulationGetDataBodyFlag     = simulationGetDataFlags.String("body", "REQUIRED", "")
+		simulationGetDataJWTTokenFlag = simulationGetDataFlags.String("jwt-token", "", "")
 
 		userFlags = flag.NewFlagSet("user", flag.ContinueOnError)
 
@@ -102,7 +141,18 @@ func ParseEndpoint(
 
 	thirdPartFlags.Usage = thirdPartUsage
 	thirdPartGetActualTimeDataFlags.Usage = thirdPartGetActualTimeDataUsage
+	thirdPartReceiveThirdPartyPushDataFlags.Usage = thirdPartReceiveThirdPartyPushDataUsage
 	thirdPartGormRelatedSearchFlags.Usage = thirdPartGormRelatedSearchUsage
+
+	importFileFlags.Usage = importFileUsage
+	importFileImportExcelFileFlags.Usage = importFileImportExcelFileUsage
+	importFileGetImportExcelFileInfoFlags.Usage = importFileGetImportExcelFileInfoUsage
+	importFileReformOfAdministrativeFlags.Usage = importFileReformOfAdministrativeUsage
+	importFileCrowdRunsLittleFlags.Usage = importFileCrowdRunsLittleUsage
+
+	simulationFlags.Usage = simulationUsage
+	simulationSetDataFlags.Usage = simulationSetDataUsage
+	simulationGetDataFlags.Usage = simulationGetDataUsage
 
 	userFlags.Usage = userUsage
 	userLoginByUsernameFlags.Usage = userLoginByUsernameUsage
@@ -132,6 +182,10 @@ func ParseEndpoint(
 			svcf = entityHallFlags
 		case "third-part":
 			svcf = thirdPartFlags
+		case "import-file":
+			svcf = importFileFlags
+		case "simulation":
+			svcf = simulationFlags
 		case "user":
 			svcf = userFlags
 		default:
@@ -171,8 +225,37 @@ func ParseEndpoint(
 			case "get-actual-time-data":
 				epf = thirdPartGetActualTimeDataFlags
 
+			case "receive-third-party-push-data":
+				epf = thirdPartReceiveThirdPartyPushDataFlags
+
 			case "gorm-related-search":
 				epf = thirdPartGormRelatedSearchFlags
+
+			}
+
+		case "import-file":
+			switch epn {
+			case "import-excel-file":
+				epf = importFileImportExcelFileFlags
+
+			case "get-import-excel-file-info":
+				epf = importFileGetImportExcelFileInfoFlags
+
+			case "reform-of-administrative":
+				epf = importFileReformOfAdministrativeFlags
+
+			case "crowd-runs-little":
+				epf = importFileCrowdRunsLittleFlags
+
+			}
+
+		case "simulation":
+			switch epn {
+			case "set-data":
+				epf = simulationSetDataFlags
+
+			case "get-data":
+				epf = simulationGetDataFlags
 
 			}
 
@@ -238,9 +321,38 @@ func ParseEndpoint(
 			case "get-actual-time-data":
 				endpoint = c.GetActualTimeData()
 				data = nil
+			case "receive-third-party-push-data":
+				endpoint = c.ReceiveThirdPartyPushData()
+				data, err = thirdpartc.BuildReceiveThirdPartyPushDataPayload(*thirdPartReceiveThirdPartyPushDataBodyFlag)
 			case "gorm-related-search":
 				endpoint = c.GormRelatedSearch()
 				data = nil
+			}
+		case "import-file":
+			c := importfilec.NewClient(scheme, host, doer, enc, dec, restore)
+			switch epn {
+			case "import-excel-file":
+				endpoint = c.ImportExcelFile(importFileImportExcelFileEncoderFn)
+				data, err = importfilec.BuildImportExcelFilePayload(*importFileImportExcelFileBodyFlag, *importFileImportExcelFileAreaFlag, *importFileImportExcelFileYearFlag, *importFileImportExcelFileTypeFlag)
+			case "get-import-excel-file-info":
+				endpoint = c.GetImportExcelFileInfo()
+				data, err = importfilec.BuildGetImportExcelFileInfoPayload(*importFileGetImportExcelFileInfoEndYearFlag, *importFileGetImportExcelFileInfoAreaFlag)
+			case "reform-of-administrative":
+				endpoint = c.ReformOfAdministrative()
+				data, err = importfilec.BuildReformOfAdministrativePayload(*importFileReformOfAdministrativeBodyFlag)
+			case "crowd-runs-little":
+				endpoint = c.CrowdRunsLittle()
+				data, err = importfilec.BuildCrowdRunsLittlePayload(*importFileCrowdRunsLittleBodyFlag)
+			}
+		case "simulation":
+			c := simulationc.NewClient(scheme, host, doer, enc, dec, restore)
+			switch epn {
+			case "set-data":
+				endpoint = c.SetData()
+				data, err = simulationc.BuildSetDataPayload(*simulationSetDataBodyFlag, *simulationSetDataJWTTokenFlag)
+			case "get-data":
+				endpoint = c.GetData()
+				data, err = simulationc.BuildGetDataPayload(*simulationGetDataBodyFlag, *simulationGetDataJWTTokenFlag)
 			}
 		case "user":
 			c := userc.NewClient(scheme, host, doer, enc, dec, restore)
@@ -348,6 +460,7 @@ Usage:
 
 COMMAND:
     get-actual-time-data: 接收大厅管理的数据
+    receive-third-party-push-data: 接收第三方推送数据--大厅排队办事实时图基础数据--排号、叫号、办结、评价四阶段
     gorm-related-search: gorm关联查询
 
 Additional help:
@@ -364,6 +477,21 @@ Example:
 `, os.Args[0])
 }
 
+func thirdPartReceiveThirdPartyPushDataUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] third-part receive-third-party-push-data -body JSON
+
+接收第三方推送数据--大厅排队办事实时图基础数据--排号、叫号、办结、评价四阶段
+    -body JSON: 
+
+Example:
+    `+os.Args[0]+` third-part receive-third-party-push-data --body '{
+      "count": 21,
+      "data": "",
+      "methodName": 1
+   }'
+`, os.Args[0])
+}
+
 func thirdPartGormRelatedSearchUsage() {
 	fmt.Fprintf(os.Stderr, `%s [flags] third-part gorm-related-search
 
@@ -371,6 +499,129 @@ gorm关联查询
 
 Example:
     `+os.Args[0]+` third-part gorm-related-search
+`, os.Args[0])
+}
+
+// import-fileUsage displays the usage of the import-file command and its
+// subcommands.
+func importFileUsage() {
+	fmt.Fprintf(os.Stderr, `插入Excel文件
+Usage:
+    %s [globalflags] import-file COMMAND [flags]
+
+COMMAND:
+    import-excel-file: excel数据批量导入，导入数据采用json格式存储
+    get-import-excel-file-info: 获取插入excel数据统计信息
+    reform-of-administrative: 行政审批制度改革事项详情
+    crowd-runs-little: 群众少跑腿
+
+Additional help:
+    %s import-file COMMAND --help
+`, os.Args[0], os.Args[0])
+}
+func importFileImportExcelFileUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] import-file import-excel-file -body JSON -area STRING -year INT -type INT
+
+excel数据批量导入，导入数据采用json格式存储
+    -body JSON: 
+    -area STRING: 
+    -year INT: 
+    -type INT: 
+
+Example:
+    `+os.Args[0]+` import-file import-excel-file --body '{
+      "file": "bHpw",
+      "filename": "3nb"
+   }' --area "abc" --year 2020 --type 1
+`, os.Args[0])
+}
+
+func importFileGetImportExcelFileInfoUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] import-file get-import-excel-file-info -end-year INT -area STRING
+
+获取插入excel数据统计信息
+    -end-year INT: 
+    -area STRING: 
+
+Example:
+    `+os.Args[0]+` import-file get-import-excel-file-info --end-year 2020 --area "520103"
+`, os.Args[0])
+}
+
+func importFileReformOfAdministrativeUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] import-file reform-of-administrative -body JSON
+
+行政审批制度改革事项详情
+    -body JSON: 
+
+Example:
+    `+os.Args[0]+` import-file reform-of-administrative --body '{
+      "endDate": "2020-07-27",
+      "regionCode": "520100",
+      "startDate": "2019-07-27"
+   }'
+`, os.Args[0])
+}
+
+func importFileCrowdRunsLittleUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] import-file crowd-runs-little -body JSON
+
+群众少跑腿
+    -body JSON: 
+
+Example:
+    `+os.Args[0]+` import-file crowd-runs-little --body '{
+      "endDate": "2020-07-27",
+      "regionCode": "520100",
+      "startDate": "2019-07-27"
+   }'
+`, os.Args[0])
+}
+
+// simulationUsage displays the usage of the simulation command and its
+// subcommands.
+func simulationUsage() {
+	fmt.Fprintf(os.Stderr, `模拟数据
+Usage:
+    %s [globalflags] simulation COMMAND [flags]
+
+COMMAND:
+    set-data: 设置数据
+    get-data: 获取模拟数据
+
+Additional help:
+    %s simulation COMMAND --help
+`, os.Args[0], os.Args[0])
+}
+func simulationSetDataUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] simulation set-data -body JSON -jwt-token STRING
+
+设置数据
+    -body JSON: 
+    -jwt-token STRING: 
+
+Example:
+    `+os.Args[0]+` simulation set-data --body '{
+      "isShowMock": true,
+      "key": "对应模块",
+      "orderBy": 1,
+      "orderTimeScope": 1,
+      "val": "对应值"
+   }' --jwt-token "eyJhbGciOiJIUz..."
+`, os.Args[0])
+}
+
+func simulationGetDataUsage() {
+	fmt.Fprintf(os.Stderr, `%s [flags] simulation get-data -body JSON -jwt-token STRING
+
+获取模拟数据
+    -body JSON: 
+    -jwt-token STRING: 
+
+Example:
+    `+os.Args[0]+` simulation get-data --body '{
+      "key": "对应模块"
+   }' --jwt-token "eyJhbGciOiJIUz..."
 `, os.Args[0])
 }
 
@@ -399,8 +650,8 @@ func userLoginByUsernameUsage() {
 
 Example:
     `+os.Args[0]+` user login-by-username --body '{
-      "captchaId": "zs",
-      "humanCode": "rhb",
+      "captchaId": "y",
+      "humanCode": "5wj",
       "password": "password",
       "username": "user"
    }'
@@ -454,9 +705,9 @@ func userSendSmsCodeUsage() {
 
 Example:
     `+os.Args[0]+` user send-sms-code --body '{
-      "captchaId": "urr",
-      "humanCode": "tmh",
-      "mobile": "jve"
+      "captchaId": "c",
+      "humanCode": "tw4",
+      "mobile": "wmi"
    }'
 `, os.Args[0])
 }

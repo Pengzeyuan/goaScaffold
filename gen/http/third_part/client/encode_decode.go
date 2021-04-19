@@ -105,6 +105,110 @@ func DecodeGetActualTimeDataResponse(decoder func(*http.Response) goahttp.Decode
 	}
 }
 
+// BuildReceiveThirdPartyPushDataRequest instantiates a HTTP request object
+// with method and path set to call the "thirdPart" service
+// "ReceiveThirdPartyPushData" endpoint
+func (c *Client) BuildReceiveThirdPartyPushDataRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ReceiveThirdPartyPushDataThirdPartPath()}
+	req, err := http.NewRequest("POST", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("thirdPart", "ReceiveThirdPartyPushData", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeReceiveThirdPartyPushDataRequest returns an encoder for requests sent
+// to the thirdPart ReceiveThirdPartyPushData server.
+func EncodeReceiveThirdPartyPushDataRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+	return func(req *http.Request, v interface{}) error {
+		p, ok := v.(*thirdpart.ReceiveThirdPartyPushDataPayload)
+		if !ok {
+			return goahttp.ErrInvalidType("thirdPart", "ReceiveThirdPartyPushData", "*thirdpart.ReceiveThirdPartyPushDataPayload", v)
+		}
+		body := NewReceiveThirdPartyPushDataRequestBody(p)
+		if err := encoder(req).Encode(&body); err != nil {
+			return goahttp.ErrEncodingError("thirdPart", "ReceiveThirdPartyPushData", err)
+		}
+		return nil
+	}
+}
+
+// DecodeReceiveThirdPartyPushDataResponse returns a decoder for responses
+// returned by the thirdPart ReceiveThirdPartyPushData endpoint. restoreBody
+// controls whether the response body should be restored after having been read.
+// DecodeReceiveThirdPartyPushDataResponse may return the following errors:
+//	- "bad_request" (type *goa.ServiceError): http.StatusBadRequest
+//	- "internal_server_error" (type *goa.ServiceError): http.StatusInternalServerError
+//	- error: internal error
+func DecodeReceiveThirdPartyPushDataResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body ReceiveThirdPartyPushDataResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("thirdPart", "ReceiveThirdPartyPushData", err)
+			}
+			err = ValidateReceiveThirdPartyPushDataResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("thirdPart", "ReceiveThirdPartyPushData", err)
+			}
+			res := NewReceiveThirdPartyPushDataResultOK(&body)
+			return res, nil
+		case http.StatusBadRequest:
+			var (
+				body ReceiveThirdPartyPushDataBadRequestResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("thirdPart", "ReceiveThirdPartyPushData", err)
+			}
+			err = ValidateReceiveThirdPartyPushDataBadRequestResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("thirdPart", "ReceiveThirdPartyPushData", err)
+			}
+			return nil, NewReceiveThirdPartyPushDataBadRequest(&body)
+		case http.StatusInternalServerError:
+			var (
+				body ReceiveThirdPartyPushDataInternalServerErrorResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("thirdPart", "ReceiveThirdPartyPushData", err)
+			}
+			err = ValidateReceiveThirdPartyPushDataInternalServerErrorResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("thirdPart", "ReceiveThirdPartyPushData", err)
+			}
+			return nil, NewReceiveThirdPartyPushDataInternalServerError(&body)
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("thirdPart", "ReceiveThirdPartyPushData", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // BuildGormRelatedSearchRequest instantiates a HTTP request object with method
 // and path set to call the "thirdPart" service "GormRelatedSearch" endpoint
 func (c *Client) BuildGormRelatedSearchRequest(ctx context.Context, v interface{}) (*http.Request, error) {

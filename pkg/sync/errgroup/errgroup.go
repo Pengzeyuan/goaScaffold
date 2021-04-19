@@ -30,21 +30,15 @@ func WithContext(ctx context.Context) *Group {
 	return &Group{ctx: ctx}
 }
 
-// Go calls the given function in a new goroutine.
+// WithCancel create a new Group and an associated Context derived from ctx.
 //
-// The first call to return a non-nil error cancels the group; its error will be
-// returned by Wait.
-func (g *Group) Go(f func(ctx context.Context) error) {
-	g.wg.Add(1)
-	if g.ch != nil {
-		select {
-		case g.ch <- f:
-		default:
-			g.chs = append(g.chs, f)
-		}
-		return
-	}
-	go g.do(f)
+// given function from Go will receive context derived from this ctx,
+// The derived Context is canceled the first time a function passed to Go
+// returns a non-nil error or the first time Wait returns, whichever occurs
+// first.
+func WithCancel(ctx context.Context) *Group {
+	ctx, cancel := context.WithCancel(ctx)
+	return &Group{ctx: ctx, cancel: cancel}
 }
 
 func (g *Group) do(f func(ctx context.Context) error) {
@@ -72,6 +66,52 @@ func (g *Group) do(f func(ctx context.Context) error) {
 	err = f(ctx)
 }
 
+// GOMAXPROCS set max goroutine to work.
+func (g *Group) GOMAXPROCS(n int) {
+	if n <= 0 {
+		panic("errgroup: GOMAXPROCS must great than 0")
+	}
+	g.workerOnce.Do(func() {
+		g.ch = make(chan func(context.Context) error, n)
+		for i := 0; i < n; i++ {
+			go func() {
+				for f := range g.ch {
+					g.do(f)
+				}
+			}()
+		}
+	})
+}
+
+// Go calls the given function in a new goroutine.
+//
+// The first call to return a non-nil error cancels the group; its error will be
+// returned by Wait.
+func (g *Group) Go(f func(ctx context.Context) error) {
+	g.wg.Add(1)
+	if g.ch != nil {
+		select {
+		case g.ch <- f:
+		default:
+			g.chs = append(g.chs, f)
+		}
+		return
+	}
+	go g.do(f)
+}
+
+//func (g *Group) Go1(f func() error) {
+//	g.wg.Add(1)
+//	if g.ch != nil {
+//		select {
+//		case g.ch <- f:
+//		default:
+//			g.chs = append(g.chs, f)
+//		}
+//		return
+//	}
+//	go g.do(f)
+//}
 // Wait blocks until all function calls from the Go method have returned, then
 // returns the first non-nil error (if any) from them.
 func (g *Group) Wait() error {
